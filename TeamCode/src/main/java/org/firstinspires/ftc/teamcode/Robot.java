@@ -48,12 +48,13 @@ class Robot extends OpMode {
     }
 
     public static String TAG = "ROBOTCLASS";
-
+    public DcMotor mtrLeftDrive = hardwareMap.dcMotor.get("mtrLeftDrive");
+    public DcMotor mtrRightDrive = hardwareMap.dcMotor.get("mtrRightDrive");
+    public Servo grabbyarmmy = hardwareMap.servo.get("armmygrabby");
     private static Robot currInstance = null;
 
-    public static Robot getInstance(OpMode opMode) {
+    public static Robot getInstance() {
         currInstance = currInstance == null ? new Robot() : currInstance;
-        currInstance.opMode = opMode;
         return currInstance;
     }
 
@@ -62,6 +63,8 @@ class Robot extends OpMode {
     public Map<String, HardwareDevice> sensors;
     List<String> flags = new CopyOnWriteArrayList<>();
     public OpMode opMode = null;
+
+
 
     @Override
     public void init() {
