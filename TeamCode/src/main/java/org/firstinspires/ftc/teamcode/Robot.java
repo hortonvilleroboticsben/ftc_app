@@ -226,6 +226,29 @@ class Robot extends OpMode {
        // while (opModeIsActive() && !t.hasTimeElapsed(msec)) ;
     }
 
+//    Mecanum Wheels
+    public void rotate(double degrees, double power){
+
+    }
+
+//    Mecanum Wheels
+    public void translate(double degrees, double power){
+        double theta2 = 45 - degrees;
+        double wheelSetPower2 = power*(Math.sin(theta2));
+        double wheelSetPower1 = power*(Math.cos(theta2));
+
+        //set 1 & 4 for wheelSetOne
+        mtrFrontLeft.setPower(wheelSetPower1);
+        mtrBackRight.setPower(wheelSetPower1);
+        //set 2 & 3 for wheelSetTwo
+        mtrFrontRight.setPower(wheelSetPower2);
+        mtrBackLeft.setPower(wheelSetPower2);
+
+
+    }
+
+
+
     //DRIVE WITH DEFAULT POWER OF 72%
 //    public void drive(double distance) {
 //        drive(distance, 0.72);
