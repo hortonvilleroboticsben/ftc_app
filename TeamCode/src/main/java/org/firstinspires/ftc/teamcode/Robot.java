@@ -50,7 +50,13 @@ class Robot extends OpMode {
     public static String TAG = "ROBOTCLASS";
     public DcMotor mtrLeftDrive = hardwareMap.dcMotor.get("mtrLeftDrive");
     public DcMotor mtrRightDrive = hardwareMap.dcMotor.get("mtrRightDrive");
-    public Servo grabbyarmmy = hardwareMap.servo.get("armmygrabby");
+    public DcMotor mtrFrontLeft = hardwareMap.dcMotor.get("mtrFrontLeft");
+    public DcMotor mtrFrontRight = hardwareMap.dcMotor.get("mtrFrontTight");
+    public DcMotor mtrBackLeft = hardwareMap.dcMotor.get("mtrBackLeft");
+    public DcMotor mtrBackRight = hardwareMap.dcMotor.get("mtrBackRight");
+    public DcMotor mtrArmLift = hardwareMap.dcMotor.get("mtrArmLift");
+    public Servo left = hardwareMap.servo.get("srvLeft");
+    public Servo right = hardwareMap.servo.get("srvRight");
     private static Robot currInstance = null;
 
     public static Robot getInstance() {
