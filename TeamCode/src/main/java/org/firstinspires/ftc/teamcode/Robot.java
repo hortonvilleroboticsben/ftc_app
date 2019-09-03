@@ -64,8 +64,10 @@ class Robot{
             {"left","p"},
             {"right","p"}
     };
-    String[] wheelSet1 = {"mtrFrontLeft","mtrBackRight"};
-    String[] wheelSet2 = {"mtrFrontRight","mtrBackLeft"};
+    String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
+    String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
+    String[] wheelSetL = {"mtrFrontLeft", "mtrBackLeft"};
+    String[] wheelSetR = {"mtrFrontRight", "mtrBackRight"};
 
     private static Robot currInstance = null;
 
@@ -78,6 +80,8 @@ class Robot{
         for(String[] m : mtrList){
             DcMotor holder = op.hardwareMap.dcMotor.get(m[0]);
             if(m[1].equals("R")) holder.setDirection(DcMotorSimple.Direction.REVERSE);
+            else if(m[1].equals("F")) holder.setDirection(DcMotorSimple.Direction.FORWARD);
+            else holder = null;
             motors.put(m[0],holder);
         }
         for(String[] s : srvList){
@@ -109,12 +113,15 @@ class Robot{
         return (motors.get(motorName) != null) ? motors.get(motorName).getPower() : null;
     }
 
-    public void resetEncoder(String motorName) {
-        if (motors.get(motorName) != null) {
-            setRunMode(motorName, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            setRunMode(motorName, DcMotor.RunMode.RUN_USING_ENCODER);
-        } else {
-            Log.e(TAG, "resetEncoder: motor is null: " + motorName);
+    public void resetEncoder(String...motorNames) {
+        for(String name : motorNames) {
+            if (motors.get(name) != null) {
+                DcMotor.RunMode rm = motors.get(name).getMode();
+                setRunMode(name, DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                setRunMode(name, rm);
+            } else {
+                Log.e(TAG, "resetEncoder: motor is null: " + name);
+            }
         }
     }
 
