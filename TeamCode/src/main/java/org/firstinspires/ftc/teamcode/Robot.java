@@ -64,10 +64,10 @@ class Robot{
             {"left","p"},
             {"right","p"}
     };
-    String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
-    String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
-    String[] wheelSetL = {"mtrFrontLeft", "mtrBackLeft"};
-    String[] wheelSetR = {"mtrFrontRight", "mtrBackRight"};
+    static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
+    static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
+    static String[] wheelSetL = {"mtrFrontLeft", "mtrBackLeft"};
+    static String[] wheelSetR = {"mtrFrontRight", "mtrBackRight"};
 
     private static Robot currInstance = null;
 
@@ -169,41 +169,45 @@ class Robot{
     }
 
     public void resetDriveEncoders() {
-        resetEncoder("mtrFrontLeft");
-        resetEncoder("mtrBackRight");
-        resetEncoder("mtrFrontRight");
-        resetEncoder("mtrBackLeft");
+        resetEncoder(wheelSet1[0]);
+        resetEncoder(wheelSet1[1]);
+        resetEncoder(wheelSet2[0]);
+        resetEncoder(wheelSet2[1]);
     }
 
     public void setDrivePower(double ws1Pow, double ws2Pow) {
-        setPower("mtrFrontLeft", ws1Pow);
-        setPower("mtrBackRight", ws1Pow);
-        setPower("mtrFontRight", ws2Pow);
-        setPower("mtrBackLeft", ws2Pow);
+        setPower(wheelSet1[0], ws1Pow);
+        setPower(wheelSet1[1], ws1Pow);
+        setPower(wheelSet2[0], ws2Pow);
+        setPower(wheelSet2[1], ws2Pow);
     }
 
-    public void setDriveEncoderTarget(int ws1, int ws2) {
-        setTarget("mtrFrontLeft", ws1);
-        setTarget("mtrBackRight", ws1);
-        setTarget("mtrFrontRight", ws2);
-        setTarget("mtrBackLeft", ws2);
+    public void setDriveEncoderTarget(int ws1Target, int ws2Target) {
+        setTarget(wheelSet1[0], ws1Target);
+        setTarget(wheelSet1[1], ws1Target);
+        setTarget(wheelSet2[0], ws2Target);
+        setTarget(wheelSet2[1], ws2Target);
     }
 
     public void setDriveRunMode(DcMotor.RunMode rm) {
-        setRunMode("mtrFrontLeft", rm);
-        setRunMode("mtrRightDrive", rm);
+        setRunMode(wheelSet1[0], rm);
+        setRunMode(wheelSet1[1],rm);
+        setRunMode(wheelSet2[0], rm);
+        setRunMode(wheelSet2[1],rm);
     }
 
-    public void initRunDriveToTarget(int lTarget, double lPow, int rTarget, double rPow) {
-        initRunToTarget("mtrFrontLeft", lTarget, lPow);
-        initRunToTarget("mtrRightDrive", rTarget, rPow);
+    public void initRunDriveToTarget(int ws1Target, double lPow, int ws2Target, double rPow) {
+        initRunToTarget(wheelSet1[0], ws1Target, lPow);
+        initRunToTarget(wheelSet1[1],ws1Target,lPow);
+        initRunToTarget(wheelSet2[0], ws2Target, rPow);
+        initRunToTarget(wheelSet2[1],ws2Target,rPow);
     }
 
-    public void initRunDriveToTarget(int ws1, double ws1Pow, int ws2, double ws2Pow, boolean reset) {
+    public void initRunDriveToTarget(int ws1Target, double ws1Pow, int ws2Target, double ws2Pow, boolean reset) {
         if (reset) resetDriveEncoders();
         setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setDriveEncoderTarget(ws1, ws2);
-        setDrivePower(ws1, ws2);
+        setDriveEncoderTarget(ws1Target, ws2Target);
+        setDrivePower(ws1Pow, ws2Pow);
     }
 
     public boolean opModeIsActive() {

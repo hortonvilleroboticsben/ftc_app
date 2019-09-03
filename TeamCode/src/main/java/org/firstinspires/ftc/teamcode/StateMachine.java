@@ -113,7 +113,7 @@ class StateMachine{
     }*/
 
     //    Mecanum Wheels
-    void translate(double degrees, double power, double distance){ // Degrees  0 -> Straight, Degrees 90 -> , Degrees -90 ->
+    void translate(double degrees, double power, double distance){ //Degrees0->Straight, Degrees 90 -> Left , Degrees -90 -> Right, Degrees 180 -> Backwards
         double wheelRotations = distance / wheelCircummference;
         int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
         double theta2 = -45 - degrees;
@@ -135,35 +135,34 @@ class StateMachine{
             rbt.opMode.telemetry.addData("target", targetEncoderCounts);
             rbt.opMode.telemetry.update();
 
-            if ( (Math.abs(rbt.getEncoderCounts("mtrFrontLeft")) >= Math.abs(wheelSetEncoder1) - 20)
-                    && (Math.abs(rbt.getEncoderCounts("mtrBackRight")) >= Math.abs(wheelSetEncoder1) - 20) ) {
-                rbt.setPower("mtrFrontLeft", 0);
-                rbt.setPower("mtrBackRight",0);
+            if ( (Math.abs(rbt.getEncoderCounts(rbt.wheelSet1[0])) >= Math.abs(wheelSetEncoder1) - 20)
+                    && (Math.abs(rbt.getEncoderCounts(rbt.wheelSet1[1])) >= Math.abs(wheelSetEncoder1) - 20) ) {
+                rbt.setPower(rbt.wheelSet1[0], 0);
+                rbt.setPower(rbt.wheelSet1[1],0);
             } else {
-                rbt.setPower("mtrFrontLeft", wheelSetPower1);
-                rbt.setPower("mtrBackRight", wheelSetPower1);
+                rbt.setPower(rbt.wheelSet1[0], wheelSetPower1);
+                rbt.setPower(rbt.wheelSet1[1], wheelSetPower1);
             }
 
-            if ( (Math.abs(rbt.getEncoderCounts("mtrFrontRight")) >= Math.abs(wheelSetEncoder2) - 20)
-                    && (Math.abs(rbt.getEncoderCounts("mtrBackLeft")) >= Math.abs(wheelSetEncoder2) - 20) ) {
-                rbt.setPower("mtrFrontRight", 0);
-                rbt.setPower("mtrBackLeft",0);
+            if ( (Math.abs(rbt.getEncoderCounts(rbt.wheelSet2[0])) >= Math.abs(wheelSetEncoder2) - 20)
+                    && (Math.abs(rbt.getEncoderCounts(rbt.wheelSet2[1])) >= Math.abs(wheelSetEncoder2) - 20) ) {
+                rbt.setPower(rbt.wheelSet2[0], 0);
+                rbt.setPower(rbt.wheelSet2[1],0);
             } else {
-                rbt.setPower("mtrFrontRight", wheelSetPower2);
-                rbt.setPower("mtrBackLeft", wheelSetPower2);
+                rbt.setPower(rbt.wheelSet2[0], wheelSetPower2);
+                rbt.setPower(rbt.wheelSet2[1], wheelSetPower2);
             }
 
-            if (rbt.getPower("mtrFrontLeft") == 0 && rbt.getPower("mtrBackRight") == 0
-                    && rbt.getPower("mtrFrontRight")==0 && rbt.getPower("mtrBackLeft")==0) break;
+            if (rbt.getPower(rbt.wheelSet1[0]) == 0 && rbt.getPower(rbt.wheelSet1[1]) == 0
+                    && rbt.getPower(rbt.wheelSet2[1])==0 && rbt.getPower(rbt.wheelSet2[1])==0) break;
         }
 
         rbt.resetDriveEncoders();
 
     }
 
-    public void turn(double degrees, double power) { //TODO: im dying here
-        DcMotor mtrLeftDrive = rbt.motors.get("mtrLeftDrive"), mtrRightDrive = rbt.motors.get("mtrRightDrive");
-        double turnCircumference = .6981 * Math.PI;
+    public void rotate(double degrees, double power) {
+        double turnCircumference = 14 * Math.PI;
         double wheelRotations = (turnCircumference / wheelCircummference) * (Math.abs(degrees) / 360);
         int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
         Log.i(TAG, "turn: Target counts: " + targetEncoderCounts);
@@ -182,31 +181,37 @@ class StateMachine{
 
         while (rbt.opModeIsActive()) {
 
-            Log.d(TAG, "turn: current right count: " + mtrRightDrive.getCurrentPosition());
-            Log.d(TAG, "turn: current left count: " + mtrLeftDrive.getCurrentPosition());
+            //Log.d(TAG, "turn: current right count: " + mtrRightDrive.getCurrentPosition());
+            //Log.d(TAG, "turn: current left count: " + mtrLeftDrive.getCurrentPosition());
 
-            if (Math.abs(rbt.getEncoderCounts("mtrLeftDrive")) >= Math.abs(targetEncoderCounts) - 20) {
-                rbt.setPower("mtrLeftDrive", 0);
+            if ( (Math.abs(rbt.getEncoderCounts(rbt.wheelSetL[0])) >= Math.abs(targetEncoderCounts) - 20)
+                    && (Math.abs(rbt.getEncoderCounts(rbt.wheelSetL[1])) >= Math.abs(targetEncoderCounts) - 20) ) {
+                rbt.setPower(rbt.wheelSetL[0], 0);
+                rbt.setPower(rbt.wheelSetL[1],0);
             } else {
-                rbt.setPower("mtrLeftDrive", power);
+                rbt.setPower(rbt.wheelSetL[0], power);
+                rbt.setPower(rbt.wheelSetL[1], power);
             }
 
-            if (Math.abs(rbt.getEncoderCounts("mtrRightDrive")) >= Math.abs(targetEncoderCounts) - 20) {
-                rbt.setPower("mtrRightDrive", 0);
+            if ( (Math.abs(rbt.getEncoderCounts(rbt.wheelSetR[0])) >= Math.abs(targetEncoderCounts) - 20)
+                    && (Math.abs(rbt.getEncoderCounts(rbt.wheelSetR[1])) >= Math.abs(targetEncoderCounts) - 20) ) {
+                rbt.setPower(rbt.wheelSetR[0], 0);
+                rbt.setPower(rbt.wheelSetR[1],0);
             } else {
-                rbt.setPower("mtrRightDrive", power);
+                rbt.setPower(rbt.wheelSetR[0], power);
+                rbt.setPower(rbt.wheelSetR[1], power);
             }
 
-            if (rbt.getPower("mtrLeftDrive") == 0 && rbt.getPower("mtrRightDrive") == 0) break;
+            if (rbt.getPower(rbt.wheelSetL[0]) == 0 && rbt.getPower(rbt.wheelSetL[1]) == 0
+                    && rbt.getPower(rbt.wheelSetR[0])==0 && rbt.getPower(rbt.wheelSetR[1])==0) break;
         }
 
-        mtrLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rbt.setDriveRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Log.v(TAG, "turn: Successfully turned to target of " + degrees + " degrees");
     }
 
     //    Mecanum Wheels
-    void rotate(double degrees, double power){
+    //void rotate(double degrees, double power){
 
-    }
+   // }
 }
