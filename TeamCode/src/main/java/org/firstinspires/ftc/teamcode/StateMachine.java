@@ -120,7 +120,7 @@ class StateMachine{
         int wheelSetEncoder1 = (int) (targetEncoderCounts*(Math.cos(theta2) * 180 / Math.PI));
         int wheelSetEncoder2 = (int) (-targetEncoderCounts*(Math.sin(theta2) * 180 / Math.PI));
         double wheelSetPower1 = power*(Math.cos(theta2));
-        double wheelSetPower2 = -power*(Math.sin(theta2));
+        double wheelSetPower2 = power*-(Math.sin(theta2));
 
 
 
