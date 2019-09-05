@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp (name = "GrabbyArmyTele-Op", group = "TeleOp")
-public class TeleOpTesting extends OpMode {
+public class DemoTeleOp extends OpMode {
 
     DcMotor left, right, armLift;
     Servo armLeft, armRight;
@@ -44,7 +44,12 @@ public class TeleOpTesting extends OpMode {
         telemetry.addData("ARMY", armLift.getCurrentPosition());
         //ben fucking sucks... screw you ben
         //              1)..............................................   1t & 2)..   2t).   2f & 3)...   3t)   3f)..   1f)..
-        armLift.setPower(armLift.getCurrentPosition() < 0 || gamepad1.y ? gamepad1.y ? -0.5 : gamepad1.a ? 0.5 : -0.10 : -0.10);
+        armLift.setPower(armLift.getCurrentPosition() < 0 || gamepad1.y || gamepad1.left_bumper ? gamepad1.y ? -0.6 : gamepad1.a && !gamepad1.start ? 0.5 : -0.0 : -0.0);
+
+        if(gamepad1.back){
+                armLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
         if(gamepad1.right_bumper && closedOS){
             closedOS = false;
@@ -52,8 +57,8 @@ public class TeleOpTesting extends OpMode {
         }else if(!gamepad1.right_bumper) closedOS = true;
 
         if(closed){
-            armLeft.setPosition(0.9);
-            armRight.setPosition(0.9);
+            armLeft.setPosition(0.7);
+            armRight.setPosition(0.7);
         } else {
             armLeft.setPosition(0);
             armRight.setPosition(0);
