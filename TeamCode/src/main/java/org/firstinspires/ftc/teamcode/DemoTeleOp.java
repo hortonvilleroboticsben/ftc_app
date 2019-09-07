@@ -37,32 +37,41 @@ public class DemoTeleOp extends OpMode {
 
         newboi = (I2cDeviceSynchImplOnSimple)hardwareMap.get("range");
         newboi.setI2cAddr(I2cAddr.create7bit(0x22));
-        newboi.write(0x07, new byte[] {0b1001010});
+        newboi.write(0x07, new byte[] {-0b0010100});
     }
 
     @Override
     public void loop() {
-        int reg3= newboi.read(0x04,1)[0];
+        //I2C Sensing Portion - Distance Sensor Test
+        int reg3= newboi.read8(0x03), reg4 = newboi.read8(0x04);
 
-        reg3 = 8<<reg3;
-        //reg3 |= reg4;
+        telemetry.addData("Reg3", reg3);
+        telemetry.addData("Reg4", reg4);
 
-        telemetry.addData("UltraSonicSensor", reg3);
+        reg3 = (reg3<<8) & 0b1111111100000000;
+        reg3 |= reg4;
+
+        telemetry.addData("¿Distance?", reg3);
+
+
+        //Speed Control
         left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y/2 : gamepad1.left_stick_y);
         right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y/2 : gamepad1.right_stick_y);
 
 
-        //arm controls
+        //Arm Controls
         telemetry.addData("ARMY", armLift.getCurrentPosition());
-        //ben fucking sucks... screw you ben
         //              1)..............................................   1t & 2)..   2t).   2f & 3)...   3t)   3f)..   1f)..
         armLift.setPower(armLift.getCurrentPosition() < 0 || gamepad1.y || gamepad1.left_bumper ? gamepad1.y ? -0.6 : gamepad1.a && !gamepad1.start ? 0.5 : -0.0 : -0.0);
 
+        //Arm Soft Stop Override
         if(gamepad1.back){
                 armLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
+
+        //Servo Control - OS Toggle
         if(gamepad1.right_bumper && closedOS){
             closedOS = false;
             closed = !closed;
@@ -76,9 +85,5 @@ public class DemoTeleOp extends OpMode {
             armRight.setPosition(0);
         }
 
-//        armLeft.setPosition(gamepad1.left_trigger);
-//        armRight.setPosition(gamepad1.left_trigger);
-//        left.setPower(gamepad1.left_stick_y);
-//        right.setPower(-gamepad1.right_stick_y);
     }
 }
