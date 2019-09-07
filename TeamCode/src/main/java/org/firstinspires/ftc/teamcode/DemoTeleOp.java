@@ -4,13 +4,18 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchImplOnSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 @TeleOp (name = "GrabbyArmyTele-Op", group = "TeleOp")
 public class DemoTeleOp extends OpMode {
 
     DcMotor left, right, armLift;
     Servo armLeft, armRight;
+    I2cDeviceSynchImplOnSimple newboi;
     boolean closed = false;
     boolean closedOS = true;
 
@@ -26,16 +31,23 @@ public class DemoTeleOp extends OpMode {
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         armLeft = hardwareMap.servo.get("srvLeft");
         armRight = hardwareMap.servo.get("srvRight");
         armRight.setDirection(Servo.Direction.REVERSE);
 
+        newboi = (I2cDeviceSynchImplOnSimple)hardwareMap.get("range");
+        newboi.setI2cAddr(I2cAddr.create7bit(0x22));
+        newboi.write(0x07, new byte[] {0b1001010});
     }
 
     @Override
     public void loop() {
+        int reg3= newboi.read(0x04,1)[0];
 
+        reg3 = 8<<reg3;
+        //reg3 |= reg4;
+
+        telemetry.addData("UltraSonicSensor", reg3);
         left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y/2 : gamepad1.left_stick_y);
         right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y/2 : gamepad1.right_stick_y);
 
