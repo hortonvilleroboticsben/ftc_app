@@ -48,7 +48,7 @@ public class DemoTeleOp extends OpMode {
         telemetry.addData("Reg3", reg3);
         telemetry.addData("Reg4", reg4);
 
-        reg3 = (reg3<<8) & 0b1111111100000000;
+        reg3 = (reg3<<8);// & 0b1111111100000000;
         reg3 |= reg4;
 
         telemetry.addData("¿Distance?", reg3);
