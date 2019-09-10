@@ -196,11 +196,10 @@ class Robot{
         setRunMode(wheelSet2[1],rm);
     }
 
-    public void initRunDriveToTarget(int ws1Target, double lPow, int ws2Target, double rPow) {
-        initRunToTarget(wheelSet1[0], ws1Target, lPow);
-        initRunToTarget(wheelSet1[1],ws1Target,lPow);
-        initRunToTarget(wheelSet2[0], ws2Target, rPow);
-        initRunToTarget(wheelSet2[1],ws2Target,rPow);
+    public void initRunDriveToTarget(int ws1Target, double ws1Pow, int ws2Target, double ws2Pow) {
+        setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setDriveEncoderTarget(ws1Target, ws2Target);
+        setDrivePower(ws1Pow, ws2Pow);
     }
 
     public void initRunDriveToTarget(int ws1Target, double ws1Pow, int ws2Target, double ws2Pow, boolean reset) {
@@ -243,9 +242,6 @@ class Robot{
     public Boolean hasMotorEncoderReached( String motorName, int encoderCount) {
         return (motors.get(motorName) != null) ? Math.abs(getEncoderCounts(motorName)) >= Math.abs(encoderCount) : null;
     }
-
-    //----ROBOT FUNCTIONS BEGIN----//
-    //----ROBOT FUNCTIONS BEGIN----//
 
     public void pause(long msec) {
         Timer t = new Timer();
