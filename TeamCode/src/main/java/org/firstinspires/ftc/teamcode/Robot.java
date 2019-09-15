@@ -55,15 +55,16 @@ class Robot{
     public static String TAG = "ROBOTCLASS";
 
     String[][] mtrList = {
-            {"mtrFrontLeft","F"}, //Wheel Set 1
-            {"mtrBackRight","R"}, //Wheel Set 1
-            {"mtrBackLeft","F"},  //Wheel Set 2
-            {"mtrFrontRight","R"},//Wheel Set 2
+            {"mtrFrontLeft","R"}, //Wheel Set 1
+            {"mtrBackRight","F"}, //Wheel Set 1
+            {"mtrBackLeft","R"},  //Wheel Set 2
+            {"mtrFrontRight","F"},//Wheel Set 2
     };
-    String[][] srvList = {
+    /*String[][] srvList = {
             {"left","p"},
             {"right","p"}
-    };
+    };*/
+    String[][] srvList = {};
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
     static String[] wheelSetL = {"mtrFrontLeft", "mtrBackLeft"};
@@ -77,18 +78,23 @@ class Robot{
         sensors = new HashMap<>();
         flags.clear();
 
-        for(String[] m : mtrList){
-            DcMotor holder = op.hardwareMap.dcMotor.get(m[0]);
-            if(m[1].equals("R")) holder.setDirection(DcMotorSimple.Direction.REVERSE);
-            else if(m[1].equals("F")) holder.setDirection(DcMotorSimple.Direction.FORWARD);
-            else holder = null;
-            motors.put(m[0],holder);
-        }
-        for(String[] s : srvList){
-            Object holder = null;
-            if(s[1].equals("p"))  holder = op.hardwareMap.servo.get(s[0]);
-            else if(s[1].equals("c")) holder = op.hardwareMap.crservo.get(s[0]);
-            servos.put(s[0],holder);
+        try {
+            for (String[] m : mtrList) {
+                DcMotor holder = op.hardwareMap.dcMotor.get(m[0]);
+                if (m[1].equals("R")) holder.setDirection(DcMotorSimple.Direction.REVERSE);
+                else if (m[1].equals("F")) holder.setDirection(DcMotorSimple.Direction.FORWARD);
+                else holder = null;
+                if(holder != null) holder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motors.put(m[0], holder);
+            }
+            for (String[] s : srvList) {
+                Object holder = null;
+                if (s[1].equals("p")) holder = op.hardwareMap.servo.get(s[0]);
+                else if (s[1].equals("c")) holder = op.hardwareMap.crservo.get(s[0]);
+                servos.put(s[0], holder);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

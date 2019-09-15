@@ -12,7 +12,7 @@ public class DemoTeleOp extends OpMode {
 
     DcMotor left, right, armLift;
     Servo armLeft, armRight;
-//    DFRoboticsGravityI2CTemperatureandDistanceSensor TempAndDistSensor;
+    DFRoboticsGravityI2CTemperatureandDistanceSensor thingo;
     boolean closed = false;
     boolean closedOS = true;
 
@@ -47,10 +47,13 @@ public class DemoTeleOp extends OpMode {
 //
 //        reg3 = (reg3<<8) & 0b1111111100000000;
 //        reg3 |= reg4;
-
+//
 //        telemetry.addData("¿Distance?", reg3);
-
+//
 //        telemetry.addData("Distance Sensor: ", TempAndDistSensor.getDistance()+"");
+
+          thingo = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.i2cDevice.get("thingo");
+//        telemetry.addData("THINGO", thingo.getDistanceRaw());
 
         //Speed Control
         left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y/2 : gamepad1.left_stick_y);

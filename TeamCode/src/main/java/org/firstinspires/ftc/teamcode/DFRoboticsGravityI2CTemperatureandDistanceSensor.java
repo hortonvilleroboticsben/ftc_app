@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
 import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
 import com.qualcomm.robotcore.util.TypeConversion;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-@I2cSensor(name = "I2C Temperature & Distance Sensor", description = "DF Robotics I2C Temperature & Distance Sensor", xmlTag = "I2CTempDistSensor")
-public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceSynchDevice<I2cDeviceSynch> {
+@I2cSensor(name = "I2C DF Robotics Temperature & Distance Sensor", description = "DF Robotics I2C Temperature & Distance Sensor", xmlTag = "I2CTempDistSensor")
+public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceSynchDevice<I2cDeviceSynchSimple> {
 
     public enum Register
     {
@@ -34,6 +35,8 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
         }
 
     }
+
+
 
     public double getDistance()
     {
@@ -59,14 +62,9 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
     @Override
     protected synchronized boolean doInitialize()
     {
-
-
+        deviceClient.enableWriteCoalescing(true);
         return true;
     }
-
-    //read8 to look like get raw temp HIGH **** GOT THIS MOSTLY DONE-----> Still have to double check its code is good
-
-    //read and write to particular bite
 
     public void setI2cAddress(I2cAddr newAddress)
     {
@@ -80,7 +78,7 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
 
     public void write(int ireg, byte[] data)
     {
-        write(ireg, data);
+        super.deviceClient.write(ireg, data);
     }
 
     public final static I2cAddr ADDRESS_I2C_DEFAULT = I2cAddr.create7bit(0x18);
@@ -88,11 +86,8 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
     public DFRoboticsGravityI2CTemperatureandDistanceSensor(I2cDeviceSynch deviceClient)
     {
         super(deviceClient, true);
-
         this.deviceClient.setI2cAddress(ADDRESS_I2C_DEFAULT);
-
         super.registerArmingStateCallback(false);
-        this.deviceClient.engage();
     }
 
     @Override
@@ -114,6 +109,7 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
 
     protected short readShort(Register reg)
     {
+        //creg is the number of bytes to read
         return TypeConversion.byteArrayToShort(deviceClient.read(reg.bVal, 2));
     }
 
