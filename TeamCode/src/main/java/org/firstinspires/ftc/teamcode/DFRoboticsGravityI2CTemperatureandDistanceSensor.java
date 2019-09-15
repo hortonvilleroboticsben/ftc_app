@@ -2,13 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
+import com.qualcomm.robotcore.hardware.I2cWaitControl;
 import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
 import com.qualcomm.robotcore.util.TypeConversion;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
-@I2cSensor(name = "I2C Temperature & Distance Sensor", description = "DF Robotics I2C Temperature & Distance Sensor", xmlTag = "I2CTemp&DistSensor")
+@I2cSensor(name = "I2C Temperature & Distance Sensor", description = "DF Robotics I2C Temperature & Distance Sensor", xmlTag = "I2CTempDistSensor")
 public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceSynchDevice<I2cDeviceSynch> {
 
     public enum Register
@@ -30,23 +32,55 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
         {
             this.bVal = bVal;
         }
+
     }
+
+    public double getDistance()
+    {
+        short dataRaw = getDistanceRaw();
+
+        // The first 3 bits are alert bits that we don't care about here. We need to force them to
+        // be 0s or 1s if the number is positive or negative depending on the sign
+        if((dataRaw & 0x1000) == 0x1000) // Negative
+            dataRaw |= 0xE000;
+        else // Positive
+            dataRaw &= 0x1FFF;
+
+        // Multiply by least significant bit (2^-4 = 1/16) to scale
+        return dataRaw / 16.0;
+    }
+
+    public short getDistanceRaw()
+    {
+        return readShort(Register.DISTANCE_HIGH);
+    }
+
 
     @Override
     protected synchronized boolean doInitialize()
     {
-        
+
 
         return true;
     }
 
-    protected void setOptimalReadWindow()
+    //read8 to look like get raw temp HIGH **** GOT THIS MOSTLY DONE-----> Still have to double check its code is good
+
+    //read and write to particular bite
+
+    public void setI2cAddress(I2cAddr newAddress)
     {
-        I2cDeviceSynch.ReadWindow readWindow = new I2cDeviceSynch.ReadWindow(
-                Register.DEVICE_ADDRESS.bVal,
-                Register.LAST.bVal - Register.DEVICE_ADDRESS.bVal + 1,
-                I2cDeviceSynch.ReadMode.REPEAT);
-        this.deviceClient.setReadWindow(readWindow);
+        deviceClient.setI2cAddr(newAddress);
+    }
+
+    public void setI2cAddr(I2cAddr i2cAddr)
+    {
+        this.deviceClient.setI2cAddress(i2cAddr);
+    }
+
+    public void write(int ireg, byte[] data)
+    {
+        write(ireg, data);
     }
 
     public final static I2cAddr ADDRESS_I2C_DEFAULT = I2cAddr.create7bit(0x18);
@@ -55,7 +89,6 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
     {
         super(deviceClient, true);
 
-        this.setOptimalReadWindow();
         this.deviceClient.setI2cAddress(ADDRESS_I2C_DEFAULT);
 
         super.registerArmingStateCallback(false);
@@ -72,6 +105,16 @@ public class DFRoboticsGravityI2CTemperatureandDistanceSensor extends I2cDeviceS
     public String getDeviceName()
     {
         return "DF Robotics Gravity I2C Temperature and Distance Sensor";
+    }
+
+    protected void writeShort(final Register reg, short value)
+    {
+        deviceClient.write(reg.bVal, TypeConversion.shortToByteArray(value));
+    }
+
+    protected short readShort(Register reg)
+    {
+        return TypeConversion.byteArrayToShort(deviceClient.read(reg.bVal, 2));
     }
 
 }
