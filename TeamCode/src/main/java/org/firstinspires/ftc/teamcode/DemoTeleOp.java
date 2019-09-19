@@ -5,17 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cAddr;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynchImplOnSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 @TeleOp (name = "GrabbyArmyTele-Op", group = "TeleOp")
 public class DemoTeleOp extends OpMode {
 
     DcMotor left, right, armLift;
     Servo armLeft, armRight;
-    I2cDeviceSynchImplOnSimple newboi;
+    DFRoboticsGravityI2CTemperatureandDistanceSensor thingo;
     boolean closed = false;
     boolean closedOS = true;
 
@@ -35,28 +32,42 @@ public class DemoTeleOp extends OpMode {
         armRight = hardwareMap.servo.get("srvRight");
         armRight.setDirection(Servo.Direction.REVERSE);
 
-        newboi = (I2cDeviceSynchImplOnSimple)hardwareMap.get("range");
-        newboi.setI2cAddr(I2cAddr.create7bit(0x22));
-        newboi.write(0x07, new byte[] {-0b0010100});
+//        TempAndDistSensor = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.get("range");
+//        TempAndDistSensor.setI2cAddr(I2cAddr.create7bit(0x22));
+//        TempAndDistSensor.write(0x07, new byte[] {-0b0010100});
     }
 
     @Override
     public void loop() {
         //I2C Sensing Portion - Distance Sensor Test
-        int reg3= newboi.read8(0x03), reg4 = newboi.read8(0x04);
+//        int reg3= TempAndDistSensor.read8(0x03), reg4 = TempAndDistSensor.read8(0x04);
+//
+//        telemetry.addData("Reg3", reg3);
+//        telemetry.addData("Reg4", reg4);
+//
+//        reg3 = (reg3<<8) & 0b1111111100000000;
+//        reg3 |= reg4;
+//
+//        telemetry.addData("¿Distance?", reg3);
+//
+//        telemetry.addData("Distance Sensor: ", TempAndDistSensor.getDistance()+"");
 
-        telemetry.addData("Reg3", reg3);
-        telemetry.addData("Reg4", reg4);
-
-        reg3 = (reg3<<8);// & 0b1111111100000000;
-        reg3 |= reg4;
-
-        telemetry.addData("¿Distance?", reg3);
-
+          thingo = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.i2cDevice.get("thingo");
+//        telemetry.addData("THINGO", thingo.getDistanceRaw());
 
         //Speed Control
         left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y/2 : gamepad1.left_stick_y);
         right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y/2 : gamepad1.right_stick_y);
+
+        //KIDDO X STICK CONTROLS ???? Still have to test & probs won't work
+        if(Math.abs(gamepad1.left_stick_x) > 0.05 && (Math.abs(gamepad1.left_stick_x) > 0.05)) {
+            left.setPower(gamepad1.left_stick_x / 2);
+            right.setPower(gamepad1.right_stick_x / 2);
+        }
+
+        //KIDDO SPEED CONTROLS
+//        left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y : gamepad1.left_stick_y/2);
+//        right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y : gamepad1.right_stick_y/2);
 
 
         //Arm Controls
@@ -66,7 +77,7 @@ public class DemoTeleOp extends OpMode {
 
         //Arm Soft Stop Override
         if(gamepad1.back){
-                armLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            armLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             armLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
@@ -75,11 +86,12 @@ public class DemoTeleOp extends OpMode {
         if(gamepad1.right_bumper && closedOS){
             closedOS = false;
             closed = !closed;
+            telemetry.addData("CLOSED", closed);
         }else if(!gamepad1.right_bumper) closedOS = true;
 
         if(closed){
-            armLeft.setPosition(0.7);
-            armRight.setPosition(0.7);
+            armLeft.setPosition(0.8);
+            armRight.setPosition(0.8);
         } else {
             armLeft.setPosition(0);
             armRight.setPosition(0);
