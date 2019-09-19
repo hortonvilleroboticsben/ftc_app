@@ -55,10 +55,10 @@ class Robot{
     public static String TAG = "ROBOTCLASS";
 
     String[][] mtrList = {
-            {"mtrFrontLeft","R"}, //Wheel Set 1
-            {"mtrBackRight","F"}, //Wheel Set 1
-            {"mtrBackLeft","R"},  //Wheel Set 2
-            {"mtrFrontRight","F"},//Wheel Set 2
+            {"mtrFrontLeft","F"}, //Wheel Set 1
+            {"mtrBackRight","R"}, //Wheel Set 1
+            {"mtrBackLeft","F"},  //Wheel Set 2
+            {"mtrFrontRight","R"},//Wheel Set 2
     };
     /*String[][] srvList = {
             {"left","p"},
@@ -137,8 +137,9 @@ class Robot{
 
     public void setTarget(String motorName, int target) {
         if (motors.get(motorName) != null) {
-            setRunMode(motorName, DcMotor.RunMode.RUN_TO_POSITION);
             motors.get(motorName).setTargetPosition(target);
+            setRunMode(motorName, DcMotor.RunMode.RUN_TO_POSITION);
+
         }
     }
 
@@ -203,16 +204,17 @@ class Robot{
     }
 
     public void initRunDriveToTarget(int ws1Target, double ws1Pow, int ws2Target, double ws2Pow) {
-        setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         setDriveEncoderTarget(ws1Target, ws2Target);
         setDrivePower(ws1Pow, ws2Pow);
+        setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void initRunDriveToTarget(int ws1Target, double ws1Pow, int ws2Target, double ws2Pow, boolean reset) {
         if (reset) resetDriveEncoders();
-        setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
         setDriveEncoderTarget(ws1Target, ws2Target);
         setDrivePower(ws1Pow, ws2Pow);
+        setDriveRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
 
     public boolean opModeIsActive() {

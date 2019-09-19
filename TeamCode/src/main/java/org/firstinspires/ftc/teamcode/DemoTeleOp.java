@@ -12,7 +12,7 @@ public class DemoTeleOp extends OpMode {
 
     DcMotor left, right, armLift;
     Servo armLeft, armRight;
-    DFRoboticsGravityI2CTemperatureandDistanceSensor thingo;
+//    DFRoboticsGravityI2CTemperatureandDistanceSensor thingo;
     boolean closed = false;
     boolean closedOS = true;
 
@@ -52,7 +52,7 @@ public class DemoTeleOp extends OpMode {
 //
 //        telemetry.addData("Distance Sensor: ", TempAndDistSensor.getDistance()+"");
 
-          thingo = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.i2cDevice.get("thingo");
+//          thingo = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.i2cDevice.get("thingo");
 //        telemetry.addData("THINGO", thingo.getDistanceRaw());
 
         //Speed Control

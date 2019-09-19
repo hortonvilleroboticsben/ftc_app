@@ -8,34 +8,69 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class MechanumWheelTestTeleOp extends OpMode {
 
     Robot r;
+    public boolean auto = false;
     StateMachine m = new StateMachine();
+    double theta1 = 0;
 
     @Override
     public void init() {
+        m.state_in_progress = 99;
         r = Robot.getInstance();
         r.initialize(this);
     }
 
     @Override
     public void loop() {
-        double theta1 = ((Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x)));
-        double x = gamepad1.left_stick_x;
-        double y = gamepad1.left_stick_y;
-        if(gamepad1.left_stick_x == 0 && gamepad1.left_stick_y > 0){
-            theta1 = Math.PI/2;
-        } else if (gamepad1.left_stick_x ==0 && gamepad1.left_stick_y < 0){
-            theta1 = -Math.PI/2;
-        } else if(gamepad1.left_stick_x < 0){
-            //theta1 = Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI;
-        } else if(gamepad1.left_stick_x > 0){
-            theta1 = (Math.atan(gamepad1.left_stick_y/gamepad1.left_stick_x) + Math.PI);
-        }
-        double theta2 = -3*Math.PI/4-theta1;
+
         m.initializeMachine();
 
-        r.setPower(r.wheelSet1[0], Math.abs(gamepad1.left_stick_x) > .05 || Math.abs(gamepad1.left_stick_y) > .05 ? Math.sqrt(x*x+y*y)*Math.cos(theta2) : 0);
-        r.setPower(r.wheelSet2[0], Math.abs(gamepad1.left_stick_x) > .05 || Math.abs(gamepad1.left_stick_y) > .05 ? -Math.sqrt(x*x+y*y)*Math.sin(theta2): 0);
-        r.setPower(r.wheelSet1[1], Math.abs(gamepad1.left_stick_x) > .05 || Math.abs(gamepad1.left_stick_y) > .05 ? Math.sqrt(x*x+y*y)*Math.cos(theta2) : 0);
-        r.setPower(r.wheelSet2[1], Math.abs(gamepad1.left_stick_x) > .05 || Math.abs(gamepad1.left_stick_y) > .05 ? -Math.sqrt(x*x+y*y)*Math.sin(theta2): 0);
+        if (!auto) {
+            if (Math.abs(gamepad1.right_stick_x) < 0.05) {
+
+                double x = gamepad1.left_stick_x;
+                double y = -gamepad1.left_stick_y;
+
+                theta1 = ((Math.atan(y / x)));
+
+                if (x == 0 && y > 0) {
+                    theta1 = Math.PI / 2;
+                } else if (x == 0 && y < 0) {
+                    theta1 = 3 * Math.PI / 2;
+                } else if (x < 0) {
+                    theta1 = Math.atan(y / x) + Math.PI;
+                }
+                double theta2 = Math.PI / 4 - theta1;
+
+                r.setPower(r.wheelSet1[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
+                r.setPower(r.wheelSet2[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
+                r.setPower(r.wheelSet1[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
+                r.setPower(r.wheelSet2[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
+
+
+            }else {
+                r.setPower(r.wheelSetL[0], gamepad1.right_stick_x);
+                r.setPower(r.wheelSetL[1], gamepad1.right_stick_x);
+                r.setPower(r.wheelSetR[0], -gamepad1.right_stick_x);
+                r.setPower(r.wheelSetR[1], -gamepad1.right_stick_x);
+            }
+        }
+
+        if(m.next_state_to_execute()){
+            r.setDrivePower(0.2,0);
+        }
+//        if(gamepad1.a){
+//            auto = true;
+//            m.reset();
+//        }
+            //m.translate(30,.3,2);
+            //m.rotate(30,.3);
+
+//        if(m.next_state_to_execute()){
+//            auto = false;
+//            m.incrementState();
+//        }
+
+            telemetry.addData("theta1", theta1 * 180 / Math.PI);
+            telemetry.addData("SIP", m.state_in_progress);
     }
 }

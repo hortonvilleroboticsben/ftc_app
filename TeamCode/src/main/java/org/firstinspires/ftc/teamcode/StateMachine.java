@@ -111,25 +111,23 @@ class StateMachine{
 
     //    Mecanum Wheels
     void translate(double degrees, double power, double distance) { //Degrees0->Straight, Degrees 90 -> Left , Degrees -90 -> Right, Degrees 180 -> Backwards
-        if (next_state_to_execute()) {
+//
             double wheelRotations = distance / wheelCircumference;
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
             double theta2 = (-45 - degrees) / 180.0 * Math.PI;
             int wheelSetEncoder1 = (int) (targetEncoderCounts * (Math.cos(theta2)));
             int wheelSetEncoder2 = (int) (-targetEncoderCounts * (Math.sin(theta2)));
-            double wheelSetPower1 = power * (Math.cos(theta2));
-            double wheelSetPower2 = power * -(Math.sin(theta2));
-
+            double wheelSetPower2 = power * (Math.cos(theta2));
+            double wheelSetPower1 = power * -(Math.sin(theta2));
 
             rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
-
 
             if(rbt.hasMotorEncoderReached(rbt.wheelSet1[0], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2)){
                 rbt.resetDriveEncoders();
                 incrementState();
             }
-        }
     }
+
 
     public void rotate(double degrees, double power) {
         if(next_state_to_execute()) {
@@ -142,6 +140,7 @@ class StateMachine{
             rbt.initRunToTarget(rbt.wheelSetL[1], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetR[0], (int) (Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetR[1], (int) (Math.signum(degrees) * targetEncoderCounts), power);
+
 
             if (rbt.hasMotorEncoderReached(rbt.wheelSetL[0], targetEncoderCounts) && rbt.hasMotorEncoderReached(rbt.wheelSetR[0], targetEncoderCounts)) {
                 rbt.resetDriveEncoders();
