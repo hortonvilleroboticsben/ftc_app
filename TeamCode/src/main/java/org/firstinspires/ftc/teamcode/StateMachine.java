@@ -112,6 +112,7 @@ class StateMachine{
     //    Mecanum Wheels
     void translate(double degrees, double power, double distance) { //Degrees0->Straight, Degrees 90 -> Left , Degrees -90 -> Right, Degrees 180 -> Backwards
 //
+        if(next_state_to_execute()) {
             double wheelRotations = distance / wheelCircumference;
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
             double theta2 = (-45 - degrees) / 180.0 * Math.PI;
@@ -122,10 +123,11 @@ class StateMachine{
 
             rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
 
-            if(rbt.hasMotorEncoderReached(rbt.wheelSet1[0], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2)){
+            if (rbt.hasMotorEncoderReached(rbt.wheelSet1[0], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2)) {
                 rbt.resetDriveEncoders();
                 incrementState();
             }
+        }
     }
 
 

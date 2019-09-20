@@ -55,20 +55,17 @@ public class MechanumWheelTestTeleOp extends OpMode {
             }
         }
 
-        if(m.next_state_to_execute()){
-            r.setDrivePower(0.2,0);
+        if(gamepad1.a && !gamepad1.start){
+            auto = true;
+            m.reset();
         }
-//        if(gamepad1.a){
-//            auto = true;
-//            m.reset();
-//        }
-            //m.translate(30,.3,2);
-            //m.rotate(30,.3);
+            m.translate(30,.3,2);
+//            m.rotate(30,.3);
 
-//        if(m.next_state_to_execute()){
-//            auto = false;
-//            m.incrementState();
-//        }
+        if(m.next_state_to_execute()){
+            auto = false;
+            m.incrementState();
+        }
 
             telemetry.addData("theta1", theta1 * 180 / Math.PI);
             telemetry.addData("SIP", m.state_in_progress);
