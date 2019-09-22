@@ -14,6 +14,7 @@ class StateMachine{
     int current_number = 0;
     int state_in_progress = 1;
     boolean initOS = true;
+    boolean moveInit = true;
     long systemTime;
 
     @Override
@@ -121,10 +122,12 @@ class StateMachine{
             double wheelSetPower2 = power * (Math.cos(theta2));
             double wheelSetPower1 = power * -(Math.sin(theta2));
 
-            rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
+            rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, moveInit);
+            moveInit = false;
 
             if (rbt.hasMotorEncoderReached(rbt.wheelSet1[0], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2)) {
                 rbt.resetDriveEncoders();
+                moveInit = true;
                 incrementState();
             }
         }
