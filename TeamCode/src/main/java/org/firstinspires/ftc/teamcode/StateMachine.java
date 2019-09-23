@@ -122,10 +122,15 @@ class StateMachine{
             double wheelSetPower2 = power * (Math.cos(theta2));
             double wheelSetPower1 = power * -(Math.sin(theta2));
 
-            rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, moveInit);
-            moveInit = false;
+            Log.d("ENC_TRANSLATE", String.format("(%d,%d) / (%d,%d)",rbt.getEncoderCounts(rbt.wheelSet1[0]),rbt.getEncoderCounts(rbt.wheelSet2[0]),wheelSetEncoder1,wheelSetEncoder2));
+            Log.d("ENC_TRANSLATE",String.format("MoveInit:%s",moveInit));
+            if(moveInit) {
+                rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
+                moveInit = false;
+            }
 
-            if (rbt.hasMotorEncoderReached(rbt.wheelSet1[0], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2)) {
+            if (rbt.hasMotorEncoderReached(rbt.wheelSet1[1], wheelSetEncoder1) && rbt.hasMotorEncoderReached(rbt.wheelSet2[1], wheelSetEncoder2)) {
+                rbt.setDrivePower(0,0);
                 rbt.resetDriveEncoders();
                 moveInit = true;
                 incrementState();

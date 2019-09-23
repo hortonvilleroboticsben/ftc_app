@@ -59,13 +59,22 @@ public class MechanumWheelTestTeleOp extends OpMode {
             auto = true;
             m.reset();
         }
-            m.translate(30,.3,2);
+            m.translate(45,.5,2);
 //            m.rotate(30,.3);
 
         if(m.next_state_to_execute()){
             auto = false;
             m.incrementState();
         }
+
+
+
+        telemetry.addData("mFL", r.getEncoderCounts("mtrFrontLeft"));
+        //stays 0
+        telemetry.addData("mFR", r.getEncoderCounts("mtrFrontRight"));
+        //starts at -1, goes back and forth between 1 and 0
+        telemetry.addData("mBR", r.getEncoderCounts("mtrBackLeft"));
+        telemetry.addData("mBL", r.getEncoderCounts("mtrBackRight"));
 
             telemetry.addData("theta1", theta1 * 180 / Math.PI);
             telemetry.addData("SIP", m.state_in_progress);
