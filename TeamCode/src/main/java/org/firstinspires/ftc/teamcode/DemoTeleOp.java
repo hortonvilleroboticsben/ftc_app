@@ -60,10 +60,10 @@ public class DemoTeleOp extends OpMode {
         right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y/2 : gamepad1.right_stick_y);
 
         //KIDDO X STICK CONTROLS ???? Still have to test & probs won't work
-        if(Math.abs(gamepad1.left_stick_x) > 0.05 && (Math.abs(gamepad1.left_stick_x) > 0.05)) {
-            left.setPower(gamepad1.left_stick_x / 2);
-            right.setPower(gamepad1.right_stick_x / 2);
-        }
+//        if(Math.abs(gamepad1.left_stick_x) > 0.05 && (Math.abs(gamepad1.left_stick_x) > 0.05)) {
+//            left.setPower(gamepad1.left_stick_x / 2);
+//            right.setPower(gamepad1.right_stick_x / 2);
+//        }
 
         //KIDDO SPEED CONTROLS
 //        left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y : gamepad1.left_stick_y/2);

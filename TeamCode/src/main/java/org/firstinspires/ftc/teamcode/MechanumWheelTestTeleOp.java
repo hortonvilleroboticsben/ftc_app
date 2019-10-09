@@ -58,11 +58,11 @@ public class MechanumWheelTestTeleOp extends OpMode {
         if(gamepad1.a && !gamepad1.start){
             auto = true;
             m.reset();
+
         }
-            m.translate(45,.5,2);
-//            m.rotate(30,.3);
 
         if(m.next_state_to_execute()){
+            m.translate(45, .5, 2);
             auto = false;
             m.incrementState();
         }
@@ -78,5 +78,6 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
             telemetry.addData("theta1", theta1 * 180 / Math.PI);
             telemetry.addData("SIP", m.state_in_progress);
+            telemetry.addData("Auto", auto);
     }
 }
