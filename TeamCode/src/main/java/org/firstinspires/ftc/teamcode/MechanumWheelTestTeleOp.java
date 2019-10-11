@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -61,8 +63,8 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
         }
 
-        if(m.next_state_to_execute()){
-            m.translate(45, .5, 2);
+        if(m.next_state_to_execute() && auto && gamepad1.b){
+            m.translate(45, .5, 24);
             auto = false;
             m.incrementState();
         }
