@@ -117,38 +117,47 @@ class StateMachine{
     //    Mecanum Wheels
     void translate(double degrees, double power, double distance) { //Degrees0->Straight, Degrees 90 -> Left , Degrees -90 -> Right, Degrees 180 -> Backwards
             //boolean moveInit = true;
+        if(next_state_to_execute()) {
             double wheelRotations = distance / wheelCircumference;
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
             double theta2 = (-45 - degrees) / 180.0 * Math.PI;
             int wheelSetEncoder1 = (int) (targetEncoderCounts * (Math.cos(theta2)));
-            Log.d("ENCODERS", targetEncoderCounts+"");
+            Log.d("ENCODERS", targetEncoderCounts + "");
             int wheelSetEncoder2 = (int) (-targetEncoderCounts * (Math.sin(theta2)));
             double wheelSetPower1 = power * (Math.cos(theta2));
             double wheelSetPower2 = power * -(Math.sin(theta2));
             //Log.d("ENC_TRANSLATE",String.format("MoveInit:%s",moveInit));
             //if(moveInit) {
-                Log.d("ENCODERS","("+wheelSetEncoder1 + ":" + wheelSetPower1 + ") , (" + wheelSetEncoder2 + ":" + wheelSetPower2+")");
+            Log.d("ENCODERS", "(" + wheelSetEncoder1 + ":" + wheelSetPower1 + ") , (" + wheelSetEncoder2 + ":" + wheelSetPower2 + ")");
 
-            if(moveInit) {
-                rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
+            if (moveInit) {
+                rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2*.90, true);
                 moveInit = false;
             }
 
-              //  moveInit = false;
+            //  moveInit = false;
             //}
 
-            if (rbt.hasMotorEncoderReached(rbt.wheelSet1[1], wheelSetEncoder1)
+            if (rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1)
                     && rbt.hasMotorEncoderReached(rbt.wheelSet2[1], wheelSetEncoder2)) {
                 Log.d("ENC_TRANSLATE", String.format("(%d,%d) / (%d,%d)",
-                        rbt.getEncoderCounts(rbt.wheelSet1[0]),
+                        rbt.getEncoderCounts(wheelSet1[0]),
                         rbt.getEncoderCounts(rbt.wheelSet2[0]),
-                        wheelSetEncoder1,wheelSetEncoder2));
+                        wheelSetEncoder1, wheelSetEncoder2));
 
-                rbt.setDrivePower(0,0);
+                rbt.setDrivePower(-wheelSetPower1,-wheelSetPower2);
+                rbt.setPower(wheelSet1[0],0);
+                rbt.setPower(wheelSet1[1],0);
+                rbt.setPower(wheelSet2[0],0);
+                rbt.setPower(wheelSet2[1],0);
+
                 rbt.resetDriveEncoders();
+                rbt.setDriveRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 moveInit = true;
+                incrementState();
 //            }
             }
+        }
     }
 
 
