@@ -63,8 +63,8 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
         }
 
-        if(m.next_state_to_execute() && auto && gamepad1.b){
-            m.translate(45, .5, 24);
+        m.translate(90,0.5,24);
+        if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();
         }

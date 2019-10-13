@@ -4,12 +4,15 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import static org.firstinspires.ftc.teamcode.Robot.wheelSet1;
+import static org.firstinspires.ftc.teamcode.Robot.wheelSet2;
+
 class StateMachine{
 
     public String flag = "";
     Robot rbt= Robot.getInstance();
     final String TAG = "StateMachine";
-    final double wheelCircumference = 4 * Math.PI;
+    final double wheelCircumference = 2.7222222222222222222222222222222 * Math.PI;
     final int countsPerRotation = 560;
     int current_number = 0;
     int state_in_progress = 1;
