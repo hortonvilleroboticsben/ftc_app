@@ -163,10 +163,10 @@ class StateMachine{
 
     public void rotate(double degrees, double power) {
         if(next_state_to_execute()) {
-            double turnCircumference = 14 * Math.PI;
+            double turnCircumference = 16.55 * Math.PI; //changed but still have to test long-term rotate effect
             double wheelRotations = (turnCircumference / wheelCircumference) * (Math.abs(degrees) / 360);
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
-            Log.i(TAG, "turn: Target counts: " + targetEncoderCounts);
+            Log.d(TAG, "turn: Target counts: " + targetEncoderCounts);
 
             rbt.initRunToTarget(rbt.wheelSetL[0], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetL[1], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
@@ -174,8 +174,18 @@ class StateMachine{
             rbt.initRunToTarget(rbt.wheelSetR[1], (int) (Math.signum(degrees) * targetEncoderCounts), power);
 
 
-            if (rbt.hasMotorEncoderReached(rbt.wheelSetL[0], targetEncoderCounts) && rbt.hasMotorEncoderReached(rbt.wheelSetR[0], targetEncoderCounts)) {
+            if (rbt.hasMotorEncoderReached(rbt.wheelSetL[0], targetEncoderCounts)
+                    && rbt.hasMotorEncoderReached(rbt.wheelSetR[0], targetEncoderCounts)) {
+                Log.d(TAG,"turn: counts: "+rbt.getEncoderCounts(rbt.wheelSet1[0]));
+
+
+                rbt.setPower(wheelSet1[0],0);
+                rbt.setPower(wheelSet1[1],0);
+                rbt.setPower(wheelSet2[0],0);
+                rbt.setPower(wheelSet2[1],0);
+
                 rbt.resetDriveEncoders();
+                rbt.setDriveRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 incrementState();
             }
         }
