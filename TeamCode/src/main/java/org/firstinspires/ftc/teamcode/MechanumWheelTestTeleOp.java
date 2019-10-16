@@ -34,6 +34,8 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
                 theta1 = ((Math.atan(y / x)));
 
+                //This series of if statements prevents us from dividing by 0
+                //Because we divide by X, X != 0
                 if (x == 0 && y > 0) {
                     theta1 = Math.PI / 2;
                 } else if (x == 0 && y < 0) {
@@ -63,24 +65,19 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
         }
 
-//        m.translate(90,0.5,24);
-        m.rotate(90,.5);
+        m.rotate(30,.5);
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();
         }
 
+        telemetry.addData("mtrFrontLeft", r.getEncoderCounts("mtrFrontLeft"));
+        telemetry.addData("mtrFrontRight", r.getEncoderCounts("mtrFrontRight"));
+        telemetry.addData("mtrBackLeft", r.getEncoderCounts("mtrBackLeft"));
+        telemetry.addData("mtrBackRight", r.getEncoderCounts("mtrBackRight"));
 
-
-        telemetry.addData("mFL", r.getEncoderCounts("mtrFrontLeft"));
-        //stays 0
-        telemetry.addData("mFR", r.getEncoderCounts("mtrFrontRight"));
-        //starts at -1, goes back and forth between 1 and 0
-        telemetry.addData("mBR", r.getEncoderCounts("mtrBackLeft"));
-        telemetry.addData("mBL", r.getEncoderCounts("mtrBackRight"));
-
-            telemetry.addData("theta1", theta1 * 180 / Math.PI);
-            telemetry.addData("SIP", m.state_in_progress);
-            telemetry.addData("Auto", auto);
+        telemetry.addData("theta1", theta1 * 180 / Math.PI);
+        telemetry.addData("SIP", m.state_in_progress);
+        telemetry.addData("Auto", auto);
     }
 }

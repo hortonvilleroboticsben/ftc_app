@@ -163,7 +163,7 @@ class StateMachine{
 
     public void rotate(double degrees, double power) {
         if(next_state_to_execute()) {
-            double turnCircumference = 16.55 * Math.PI; //changed but still have to test long-term rotate effect
+            double turnCircumference = 16.6 * Math.PI; //changed but still have to test long-term rotate effect
             double wheelRotations = (turnCircumference / wheelCircumference) * (Math.abs(degrees) / 360);
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
             Log.d(TAG, "turn: Target counts: " + targetEncoderCounts);
