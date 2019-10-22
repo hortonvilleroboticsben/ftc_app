@@ -27,6 +27,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
         m.initializeMachine();
 
         if (!auto) {
+            //No turning while translating
             if (Math.abs(gamepad1.right_stick_x) < 0.05) {
 
                 double x = gamepad1.left_stick_x;
@@ -62,10 +63,12 @@ public class MechanumWheelTestTeleOp extends OpMode {
         if(gamepad1.a && !gamepad1.start){
             auto = true;
             m.reset();
+            r.resetDriveEncoders();
 
         }
 
-        m.rotate(30,.5);
+        m.rotate(45,.5);
+
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();

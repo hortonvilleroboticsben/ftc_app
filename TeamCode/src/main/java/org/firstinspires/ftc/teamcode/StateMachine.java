@@ -163,20 +163,29 @@ class StateMachine{
 
     public void rotate(double degrees, double power) {
         if(next_state_to_execute()) {
-            double turnCircumference = 16.6 * Math.PI; //changed but still have to test long-term rotate effect
+            double turnCircumference = 17.1 * Math.PI; //changed but still have to test long-term rotate effect
             double wheelRotations = (turnCircumference / wheelCircumference) * (Math.abs(degrees) / 360);
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
-            Log.d(TAG, "turn: Target counts: " + targetEncoderCounts);
+            Log.d(TAG, "MOTOR turn: Target counts: " + targetEncoderCounts);
 
             rbt.initRunToTarget(rbt.wheelSetL[0], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetL[1], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetR[0], (int) (Math.signum(degrees) * targetEncoderCounts), power);
             rbt.initRunToTarget(rbt.wheelSetR[1], (int) (Math.signum(degrees) * targetEncoderCounts), power);
 
+            Log.d(TAG, "BMOTOR Front Left "+rbt.getEncoderCounts("mtrFrontLeft"));
+            Log.d(TAG, "BMOTOR Front Right "+rbt.getEncoderCounts("mtrFrontRight"));
+            Log.d(TAG, "BMOTOR Back Left "+rbt.getEncoderCounts("mtrBackLeft"));
+            Log.d(TAG, "BMOTOR Back Right "+rbt.getEncoderCounts("mtrBackRight"));
 
             if (rbt.hasMotorEncoderReached(rbt.wheelSetL[0], targetEncoderCounts)
                     && rbt.hasMotorEncoderReached(rbt.wheelSetR[0], targetEncoderCounts)) {
-                Log.d(TAG,"turn: counts: "+rbt.getEncoderCounts(rbt.wheelSet1[0]));
+//                Log.d(TAG,"turn: counts: "+rbt.getEncoderCounts(rbt.wheelSet1[0]));
+
+                Log.d(TAG, "MOTOR Front Left "+rbt.getEncoderCounts("mtrFrontLeft"));
+                Log.d(TAG, "MOTOR Front Right "+rbt.getEncoderCounts("mtrFrontRight"));
+                Log.d(TAG, "MOTOR Back Left "+rbt.getEncoderCounts("mtrBackLeft"));
+                Log.d(TAG, "MOTOR Back Right "+rbt.getEncoderCounts("mtrBackRight"));
 
 
                 rbt.setPower(wheelSet1[0],0);
