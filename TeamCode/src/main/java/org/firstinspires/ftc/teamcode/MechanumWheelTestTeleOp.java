@@ -46,6 +46,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
                 }
                 double theta2 = Math.PI / 4 - theta1;
 
+                //I JUST NEED THIS COMMENT TO FORCE PUSH
                 r.setPower(r.wheelSet1[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
                 r.setPower(r.wheelSet2[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
                 r.setPower(r.wheelSet1[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
