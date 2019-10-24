@@ -7,22 +7,25 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous (name = "Automanis", group = "Idk")
 public class Automanis extends OpMode {
 
+    Robot r;
     StateMachine sm = new StateMachine();
 
     @Override
     public void init() {
-        sm.initializeMachine();
+        r = Robot.getInstance();
+        r.initialize(this);
+
     }
 
     @Override
     public void loop() {
+        sm.initializeMachine();
+        //sm.rotate(45,.5);
+        sm.translate(-30,.5,10);
 
-        if(sm.next_state_to_execute()) {
-
-            sm.translate(0, .5, 10);
-            sm.rotate(45,.5);
-
-            sm.incrementState();
-        }
+        telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
+        telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
+        telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
+        telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
     }
 }

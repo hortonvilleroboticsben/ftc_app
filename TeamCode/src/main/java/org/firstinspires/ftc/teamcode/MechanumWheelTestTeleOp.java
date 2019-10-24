@@ -34,7 +34,6 @@ public class MechanumWheelTestTeleOp extends OpMode {
                 double y = -gamepad1.left_stick_y;
 
                 theta1 = ((Math.atan(y / x)));
-
                 //This series of if statements prevents us from dividing by 0
                 //Because we divide by X, X != 0
                 if (x == 0 && y > 0) {
@@ -68,8 +67,8 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
         }
 
-        m.rotate(45,.5);
-
+//        m.rotate(45,.5);
+        m.translate(0,.5, 10);
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();
