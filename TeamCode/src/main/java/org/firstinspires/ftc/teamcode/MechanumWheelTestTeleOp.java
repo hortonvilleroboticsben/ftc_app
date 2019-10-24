@@ -27,6 +27,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
         m.initializeMachine();
 
         if (!auto) {
+            //No turning while translating
             if (Math.abs(gamepad1.right_stick_x) < 0.05) {
 
                 double x = gamepad1.left_stick_x;
@@ -45,6 +46,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
                 }
                 double theta2 = Math.PI / 4 - theta1;
 
+                //I JUST NEED THIS COMMENT TO FORCE PUSH
                 r.setPower(r.wheelSet1[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
                 r.setPower(r.wheelSet2[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
                 r.setPower(r.wheelSet1[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
@@ -62,10 +64,12 @@ public class MechanumWheelTestTeleOp extends OpMode {
         if(gamepad1.a && !gamepad1.start){
             auto = true;
             m.reset();
+            r.resetDriveEncoders();
 
         }
 
-        m.rotate(30,.5);
+        m.rotate(45,.5);
+
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();
