@@ -77,8 +77,9 @@ class StateMachine{
             incrementState();
         }
     }
+//    <<------------------------------ Mecanum Wheels --------------------------------->>
 
-    //    Mecanum Wheels
+
     void translate(double degrees, double power, double distance) { //Degrees0->Straight, Degrees 90 -> Left , Degrees -90 -> Right, Degrees 180 -> Backwards
             //boolean moveInit = true;
         if(next_state_to_execute()) {
@@ -90,20 +91,28 @@ class StateMachine{
             int wheelSetEncoder2 = (int) (-targetEncoderCounts * (Math.sin(theta2)));
             double wheelSetPower1 = power * (Math.cos(theta2));
             double wheelSetPower2 = power * -(Math.sin(theta2));
+
+            Log.d("POWER1: ",wheelSetPower1+"");
+            Log.d("POWER2: ",wheelSetPower2+"");
             //Log.d("ENC_TRANSLATE",String.format("MoveInit:%s",moveInit));
             //if(moveInit) {
             Log.d("ENCODERS", "(" + wheelSetEncoder1 + ":" + wheelSetPower1 + ") , (" + wheelSetEncoder2 + ":" + wheelSetPower2 + ")");
 
             if (moveInit) {
-                rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2*.90, true);
+                rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
                 moveInit = false;
             }
 
             //  moveInit = false;
             //}
 
-            if (rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1)
-                    && rbt.hasMotorEncoderReached(rbt.wheelSet2[1], wheelSetEncoder2)) {
+
+
+            if ((rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1+10)
+                    || rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1-10))
+                    && (rbt.hasMotorEncoderReached(rbt.wheelSet2[1], wheelSetEncoder2+10)
+                    || rbt.hasMotorEncoderReached(wheelSet2[1], wheelSetEncoder2-10)
+                    )) {
                 Log.d("ENC_TRANSLATE", String.format("(%d,%d) / (%d,%d)",
                         rbt.getEncoderCounts(wheelSet1[0]),
                         rbt.getEncoderCounts(rbt.wheelSet2[0]),
@@ -164,9 +173,4 @@ class StateMachine{
         }
 
     }
-
-    //    Mecanum Wheels
-    //void rotate(double degrees, double power){
-
-   // }
 }
