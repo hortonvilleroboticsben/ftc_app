@@ -44,7 +44,10 @@ public class Autonomous_Test extends OpMode {
 //
 //        }
 
-        sm.translate(0,.5,100);
+        sm.translate(0,.5,5);
+        sm.translate(-90,.5,5);
+        sm.translate(180,.5,5);
+        sm.translate(90,.5,5);
 
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));

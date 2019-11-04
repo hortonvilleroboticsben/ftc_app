@@ -10,11 +10,12 @@ public class CollectionTest extends OpMode {
     Servo rotator, flapArm;
     boolean closedFlap = false;
     boolean closedFlapOS = true;
+
     boolean closedRotator = false;
     boolean closedRotatorOS = false;
 
-    final double flapClosedPos = -0.1;
-    final double flapOpenPos = 0.1;
+    double flapClosedPos = 0.2;
+    double flapOpenPos = 0.29;
 
 
     @Override
@@ -22,6 +23,7 @@ public class CollectionTest extends OpMode {
 
         rotator = hardwareMap.servo.get("rotator");
         flapArm = hardwareMap.servo.get("flapArm");
+        telemetry.addData("FLAP-ARM INIT POS",flapOpenPos);
 //        flapArm.setDirection(Servo.Direction.REVERSE);
 
     }
@@ -38,8 +40,10 @@ public class CollectionTest extends OpMode {
 
         if(closedFlap){
             flapArm.setPosition(flapClosedPos);
+            telemetry.addData("FLAP-ARM CLOSE",flapArm.getPosition());
         } else {
             flapArm.setPosition(flapOpenPos);
+            telemetry.addData("FLAP-ARM OPEN",flapArm.getPosition());
         }
 
         //Rotator Control - OS Toggle
@@ -50,9 +54,11 @@ public class CollectionTest extends OpMode {
         } else if(!gamepad1.b) closedRotatorOS = true;
 
         if(closedRotator){
-            rotator.setPosition(.8);
+            rotator.setPosition(.5);
+            telemetry.addData("ROTATE idk",rotator.getPosition());
         } else {
-//            rotator.setPosition(0);
+            rotator.setPosition(0);
+            telemetry.addData("ROTATE otherIDK",rotator.getPosition());
         }
 
     }
