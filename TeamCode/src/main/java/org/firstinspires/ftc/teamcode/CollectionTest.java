@@ -14,8 +14,8 @@ public class CollectionTest extends OpMode {
     boolean closedRotator = false;
     boolean closedRotatorOS = false;
 
-    double flapClosedPos = 0.2;
-    double flapOpenPos = 0.29;
+    double flapClosedPos = 0.175;
+    double flapOpenPos = 0.4; //.3 is open enough
 
 
     @Override
@@ -23,7 +23,7 @@ public class CollectionTest extends OpMode {
 
         rotator = hardwareMap.servo.get("rotator");
         flapArm = hardwareMap.servo.get("flapArm");
-        telemetry.addData("FLAP-ARM INIT POS",flapOpenPos);
+        telemetry.addData("FLAP-ARM INIT POS",flapArm.getPosition());
 //        flapArm.setDirection(Servo.Direction.REVERSE);
 
     }
@@ -54,7 +54,7 @@ public class CollectionTest extends OpMode {
         } else if(!gamepad1.b) closedRotatorOS = true;
 
         if(closedRotator){
-            rotator.setPosition(.5);
+            rotator.setPosition(1);
             telemetry.addData("ROTATE idk",rotator.getPosition());
         } else {
             rotator.setPosition(0);

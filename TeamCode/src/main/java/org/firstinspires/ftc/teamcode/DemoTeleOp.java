@@ -32,43 +32,13 @@ public class DemoTeleOp extends OpMode {
         armRight = hardwareMap.servo.get("srvRight");
         armRight.setDirection(Servo.Direction.REVERSE);
 
-//        TempAndDistSensor = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.get("range");
-//        TempAndDistSensor.setI2cAddr(I2cAddr.create7bit(0x22));
-//        TempAndDistSensor.write(0x07, new byte[] {-0b0010100});
     }
 
     @Override
     public void loop() {
-        //I2C Sensing Portion - Distance Sensor Test
-//        int reg3= TempAndDistSensor.read8(0x03), reg4 = TempAndDistSensor.read8(0x04);
-//
-//        telemetry.addData("Reg3", reg3);
-//        telemetry.addData("Reg4", reg4);
-//
-//        reg3 = (reg3<<8) & 0b1111111100000000;
-//        reg3 |= reg4;
-//
-//        telemetry.addData("¿Distance?", reg3);
-//
-//        telemetry.addData("Distance Sensor: ", TempAndDistSensor.getDistance()+"");
-
-//          thingo = (DFRoboticsGravityI2CTemperatureandDistanceSensor)hardwareMap.i2cDevice.get("thingo");
-//        telemetry.addData("THINGO", thingo.getDistanceRaw());
-
         //Speed Control
         left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y/2 : gamepad1.left_stick_y);
         right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y/2 : gamepad1.right_stick_y);
-
-        //KIDDO X STICK CONTROLS ???? Still have to test & probs won't work
-//        if(Math.abs(gamepad1.left_stick_x) > 0.05 && (Math.abs(gamepad1.left_stick_x) > 0.05)) {
-//            left.setPower(gamepad1.left_stick_x / 2);
-//            right.setPower(gamepad1.right_stick_x / 2);
-//        }
-
-        //KIDDO SPEED CONTROLS
-//        left.setPower(Math.abs(gamepad1.left_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.left_stick_y : gamepad1.left_stick_y/2);
-//        right.setPower(Math.abs(gamepad1.right_stick_y) < 0.05 ? 0 : gamepad1.right_trigger > .5 ? gamepad1.right_stick_y : gamepad1.right_stick_y/2);
-
 
         //Arm Controls
         telemetry.addData("ARMY", armLift.getCurrentPosition());

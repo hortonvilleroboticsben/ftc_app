@@ -17,37 +17,36 @@ public class Autonomous_Test extends OpMode {
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
+    }
 
+    @Override
+    public void init_loop(){
+        StateMachine lazy = new StateMachine();
     }
 
     @Override
     public void loop() {
         sm.initializeMachine();
 
-//        switch(skyCase){
-//
-//            case "left":
-//                sm.translate(154,safeSpeed,22);
-//                sm.translate(-90,safeSpeed,83);
-//
-//                break;
-//
-//            case "center":
-//                sm.translate(174.5,safeSpeed,20);
-//                sm.translate(-90,safeSpeed,75);
-//                break;
-//
-//            case "right":
-//                sm.translate(-159,safeSpeed,21);
-//                sm.translate(-90,safeSpeed,67);
-//                break;
-//
-//        }
+        switch(skyCase){
 
-        sm.translate(0,.5,5);
-        sm.translate(-90,.5,5);
-        sm.translate(180,.5,5);
-        sm.translate(90,.5,5);
+            case "left":
+                sm.translate(154,safeSpeed,22);
+                sm.translate(-90,safeSpeed,83);
+
+                break;
+
+            case "center":
+                sm.translate(174.5,safeSpeed,20);
+                sm.translate(-90,safeSpeed,75);
+                break;
+
+            case "right":
+                sm.translate(-159,safeSpeed,21);
+                sm.translate(-90,safeSpeed,67);
+                break;
+
+        }
 
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
