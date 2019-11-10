@@ -60,6 +60,10 @@ class Robot{
             {"mtrBackLeft","F"},  //Wheel Set 2
             {"mtrFrontRight","R"},//Wheel Set 2
     };
+
+    String[][] senList = {
+            {"color","0x3c"}
+    };
     /*String[][] srvList = {
             {"left","p"},
             {"right","p"}
@@ -92,6 +96,16 @@ class Robot{
                 if (s[1].equals("p")) holder = op.hardwareMap.servo.get(s[0]);
                 else if (s[1].equals("c")) holder = op.hardwareMap.crservo.get(s[0]);
                 servos.put(s[0], holder);
+            }
+            for(String[] sen : senList){
+                    HardwareDevice sensor = opMode.hardwareMap.get(sen[0]);
+                    sensor.resetDeviceConfigurationForOpMode();
+                    if (sensor instanceof ColorSensor) {
+                        Log.e("ROBOT", "SENSOR IS RIGHT TYPE");
+                        ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1], 16)));
+                        ((ColorSensor) sensor).enableLed(true);
+                    }
+                    sensors.put(sen[0], sensor);
             }
         }catch (Exception e){
             e.printStackTrace();
