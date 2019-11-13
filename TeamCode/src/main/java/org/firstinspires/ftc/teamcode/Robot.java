@@ -49,7 +49,7 @@ class Robot{
 
     public Map<String, DcMotor> motors;
     public Map<String, Object> servos;
-    public Map<String, HardwareDevice> sensors;
+    public Map<String, Object> sensors;
     List<String> flags = new CopyOnWriteArrayList<>();
     public OpMode opMode = null;
     public static String TAG = "ROBOTCLASS";
@@ -62,7 +62,7 @@ class Robot{
     };
 
     String[][] senList = {
-            {"color","0x3c"}
+            {"color","3c"}
     };
     /*String[][] srvList = {
             {"left","p"},
@@ -98,10 +98,11 @@ class Robot{
                 servos.put(s[0], holder);
             }
             for(String[] sen : senList){
-                    HardwareDevice sensor = opMode.hardwareMap.get(sen[0]);
+                    HardwareDevice sensor = op.hardwareMap.get(sen[0]);
                     sensor.resetDeviceConfigurationForOpMode();
                     if (sensor instanceof ColorSensor) {
                         Log.e("ROBOT", "SENSOR IS RIGHT TYPE");
+                        sensor = op.hardwareMap.colorSensor.get(sen[0]);
                         ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1], 16)));
                         ((ColorSensor) sensor).enableLed(true);
                     }

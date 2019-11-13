@@ -3,31 +3,27 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+
+import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbTimeoutException;
 
 
 @TeleOp(name = "Color & Distance Sensor Test", group ="test")
 public class ColorAndDistanceSensorTest extends OpMode {
 
-    Robot r;
-    ColorSensor color;
-    Integer red, blue, green;
+    Robot r = Robot.getInstance();
 
     @Override
     public void init() {
-        r = Robot.getInstance();
-        color = hardwareMap.colorSensor.get("color");
+        r.initialize(this);
     }
 
     @Override
     public void loop() {
 
-        red = r.getColorValue("color", "red");
-        blue = r.getColorValue("color", "blue");
-        green = r.getColorValue("color", "green");
-
-
-        telemetry.addData("RED", red+"");
-        telemetry.addData("BLUE", blue+"");
-        telemetry.addData("GREEN", green+"");
+        telemetry.addData("RED", r.getColorValue("color","red"));
+        telemetry.addData("BLUE", r.getColorValue("color","blue"));
+        telemetry.addData("GREEN", r.getColorValue("color","green"));
     }
 }
