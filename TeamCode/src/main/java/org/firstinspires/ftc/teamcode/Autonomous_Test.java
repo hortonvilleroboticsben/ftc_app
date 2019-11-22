@@ -123,7 +123,7 @@ public class Autonomous_Test extends OpMode {
                     break;
                 default:
                     try {
-                        sm.translate(-20, safeSpeed, 20); //Travel to and Grab SkyStone
+                        sm.translate(-10, safeSpeed, 20); //Travel to and Grab SkyStone
 //                    sm.wait(500);
                         sm.translate(90, safeSpeed, 75); //Travel to Foundation and Place SkyStone
 //                    sm.wait(500);
