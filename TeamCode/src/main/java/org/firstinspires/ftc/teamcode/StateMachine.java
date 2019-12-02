@@ -71,6 +71,13 @@ class StateMachine{
         }
     }
 
+    public void pause(long msec) {
+        if(next_state_to_execute()) {
+            Timer t = new Timer();
+            while (next_state_to_execute() && !t.hasTimeElapsed(msec)) ;
+        }
+    }
+
     void ClearFlag(){
         if(next_state_to_execute()){
             flag = "";
@@ -102,11 +109,6 @@ class StateMachine{
                 rbt.initRunDriveToTarget(wheelSetEncoder1, wheelSetPower1, wheelSetEncoder2, wheelSetPower2, true);
                 moveInit = false;
             }
-
-            //  moveInit = false;
-            //}
-
-
 
             if ((rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1+10)
                     || rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1-10))

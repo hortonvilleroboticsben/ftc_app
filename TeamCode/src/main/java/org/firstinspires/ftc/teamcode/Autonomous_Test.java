@@ -65,7 +65,6 @@ public class Autonomous_Test extends OpMode {
                 lazy2.incrementState();
             }
         }
-
         telemetry.addData("Foundation Side", foundationSide+"");
         telemetry.addData("SkyCase", skyCase+"");
     }
@@ -93,44 +92,61 @@ public class Autonomous_Test extends OpMode {
             switch (skyCase) {
                 case "right":
                     try {
-                        sm.translate(-26, safeSpeed, 22); //Travel to and Grab SkyStone
-//                    sm.wait(500);
-                        sm.translate(90, safeSpeed, 83); //Travel to Foundation and Place SkyStone
-//                    sm.wait(500);
-                        sm.translate(-90, safeSpeed, 102); //Travel back for second stone
-//                    sm.wait(500); //Grab second SkyStone
-                        sm.translate(90, safeSpeed, 102); //Travel to Foundation & Place Second SkyStone
-//                    sm.wait(500);
-                        sm.translate(-90, safeSpeed, 40); //Park Under Bridge
+                        sm.translate(-26, safeSpeed, 22);
+                        //Travel to and Grab SkyStone
+                        sm.pause(500);
+                        sm.translate(90, safeSpeed, 83);
+                        //Travel to Foundation and Place SkyStone
+                        sm.pause(500);
+                        sm.translate(-90, safeSpeed, 102);
+                        //Travel back for second stone
+                        sm.pause(500);
+                        // Grab second SkyStone
+                        sm.translate(90, safeSpeed, 102);
+                        //Travel to Foundation & Place Second SkyStone
+                        sm.pause(500);
+                        sm.translate(-90, safeSpeed, 40);
+                        //Park Under Bridge
                     } catch (Exception e) {
                         Log.e("LEFT SKYCASE", "Failure");
                     }
                     break;
                 case "left":
                     try {
-                        sm.translate(24, safeSpeed, 21); //Travel to and Grab SkyStone
-//                    sm.wait(500);
-                        sm.translate(90, safeSpeed, 67); //Travel to Foundation and Place SkyStone
-//                    sm.wait(500);
-                        sm.translate(-90, safeSpeed, 90); //Travel back for second stone
-//                    sm.wait(500); //Grab second SkyStone
-                        sm.translate(90, safeSpeed, 90); //Travel to Foundation & Place Second SkyStone
-//                    sm.wait(500);
-                        sm.translate(-90, safeSpeed, 40); //Park Under Bridge
+                        sm.translate(24, safeSpeed, 21);
+                        //Travel to and Grab SkyStone
+                        sm.pause(500);
+                        sm.translate(90, safeSpeed, 67);
+                        //Travel to Foundation and Place SkyStone
+                        sm.pause(500);
+                        sm.translate(-90, safeSpeed, 90);
+                        //Travel back for second stone
+                        sm.pause(500);
+//                      //Grab second SkyStone
+                        sm.translate(90, safeSpeed, 90);
+                        //Travel to Foundation & Place Second SkyStone
+                        sm.pause(500);
+                        sm.translate(-90, safeSpeed, 40);
+                        //Park Under Bridge
                     } catch (Exception e) {
                         Log.e("RIGHT SKYCASE", "Failure");
                     }
                     break;
                 default:
                     try {
-                        sm.translate(-10, safeSpeed, 20); //Travel to and Grab SkyStone
-//                    sm.wait(500);
-                        sm.translate(90, safeSpeed, 75); //Travel to Foundation and Place SkyStone
-//                    sm.wait(500);
-                        sm.translate(-90, safeSpeed, 98); //Travel back for second stone
-//                    sm.wait(500); //Grab second SkyStone
-                        sm.translate(90, safeSpeed, 98); //Travel to Foundation & Place Second SkyStone
-//                    sm.wait(500);
+                        sm.translate(-10, safeSpeed, 20);
+                        //Travel to and Grab SkyStone
+                        sm.pause(500);
+                        sm.translate(90, safeSpeed, 75);
+                        //Travel to Foundation and Place SkyStone
+                        sm.pause(500);
+                        sm.translate(-90, safeSpeed, 98);
+                        //Travel back for second stone
+                        sm.pause(500);
+                        //Grab second SkyStone
+                        sm.translate(90, safeSpeed, 98);
+                        //Travel to Foundation & Place Second SkyStone
+                        sm.pause(500);
                         sm.translate(-90, safeSpeed, 40);
                     } catch (Exception e) {
                         Log.e("CENTER/DEFAULT SKYCASE", "Failure");
@@ -141,13 +157,10 @@ public class Autonomous_Test extends OpMode {
         } else {
 
         }
-
-
         telemetry.addData("foundationSide", foundationSide+"");
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
         telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
         telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
-
     }
 }

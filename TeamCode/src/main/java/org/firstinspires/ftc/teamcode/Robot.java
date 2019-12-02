@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.graphics.Bitmap;
@@ -16,6 +16,8 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.util.Log;
+
+import org.firstinspires.ftc.teamcode.Timer;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -29,6 +31,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
@@ -62,7 +65,9 @@ class Robot{
     };
 
     String[][] senList = {
-            {"color","3c"}
+            {"color","3c"},
+            {"distF","4c"},
+            {"distS","5c"}
     };
     /*String[][] srvList = {
             {"left","p"},
@@ -190,6 +195,14 @@ class Robot{
         return null;
     }
 
+    public Double getDistance(String sensor) {
+        if (sensors.get(sensor) != null && sensors.get(sensor) instanceof DistanceSensor) {
+            return ((DistanceSensor) sensors.get(sensor)).getDistance(DistanceUnit.CM);
+        }
+        return null;
+    }
+
+
     public void resetDriveEncoders() {
         resetEncoder(wheelSet1[0]);
         resetEncoder(wheelSet1[1]);
@@ -265,16 +278,6 @@ class Robot{
     public Boolean hasMotorEncoderReached( String motorName, int encoderCount) {
         return (motors.get(motorName) != null) ? Math.abs(getEncoderCounts(motorName)) >= Math.abs(encoderCount) : null;
     }
-
-    public void pause(long msec) {
-        Timer t = new Timer();
-       // while (opModeIsActive() && !t.hasTimeElapsed(msec)) ;
-    }
-
-    /* DEGREES CONTROLS THE DISTANCE OF THE TURN
-     * THE SIGN OF DEGREES CONTROLS WHICH MOTOR
-     * THE SIGN OF POWER CONTROLS THE DIRECTION OF THE MOTOR */
-
 
     //METHOD TO BE CALLED UPON COMPLETION OF AN AUTONOMOUS PROGRAM IF ENCODERS ARE DESIRED TO BE RESET
     public void finish() {
