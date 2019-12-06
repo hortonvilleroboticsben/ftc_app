@@ -58,10 +58,13 @@ class Robot{
     public static String TAG = "ROBOTCLASS";
 
     String[][] mtrList = {
-            {"mtrFrontLeft","F"}, //Wheel Set 1
-            {"mtrBackRight","R"}, //Wheel Set 1
-            {"mtrBackLeft","F"},  //Wheel Set 2
-            {"mtrFrontRight","R"},//Wheel Set 2
+            {"mtrFrontLeft","F"},   //Wheel Set 1
+            {"mtrBackRight","R"},   //Wheel Set 1
+            {"mtrBackLeft","F"},    //Wheel Set 2
+            {"mtrFrontRight","R"},  //Wheel Set 2
+            {"mtrCollectionLeft"},
+            {"mtrCollectionRight"},
+            {"mtrLift"}
     };
 
     String[][] senList = {
@@ -69,11 +72,10 @@ class Robot{
             {"distF","4c"},
             {"distS","5c"}
     };
-    /*String[][] srvList = {
-            {"left","p"},
-            {"right","p"}
-    };*/
-    String[][] srvList = {};
+    String[][] srvList = {
+            {"srvClamp"},
+            {"srvRotator"}
+    };
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
     static String[] wheelSetL = {"mtrFrontLeft", "mtrBackLeft"};
