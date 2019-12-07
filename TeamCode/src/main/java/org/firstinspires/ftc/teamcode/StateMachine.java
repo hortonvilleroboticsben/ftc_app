@@ -16,6 +16,8 @@ class StateMachine{
     final int countsPerRotation = 560;
     int current_number = 0;
     int state_in_progress = 1;
+    Timer t = new Timer();
+    boolean timerOS = true;
     boolean initOS = true;
     boolean moveInit = true;
 
@@ -73,8 +75,14 @@ class StateMachine{
 
     public void pause(long msec) {
         if(next_state_to_execute()) {
-            Timer t = new Timer();
-            while (next_state_to_execute() && !t.hasTimeElapsed(msec)) ;
+            if(timerOS){
+                t.reset();
+                timerOS = false;
+            }
+            if(t.hasTimeElapsed(msec)) {
+                incrementState();
+                timerOS = true;
+            }
         }
     }
 
@@ -110,10 +118,10 @@ class StateMachine{
                 moveInit = false;
             }
 
-            if ((rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1+10)
-                    || rbt.hasMotorEncoderReached(wheelSet1[1], wheelSetEncoder1-10))
-                    && (rbt.hasMotorEncoderReached(rbt.wheelSet2[1], wheelSetEncoder2+10)
-                    || rbt.hasMotorEncoderReached(wheelSet2[1], wheelSetEncoder2-10)
+            if ((rbt.hasMotorEncoderReached(wheelSet1[0], wheelSetEncoder1+10)
+                    || rbt.hasMotorEncoderReached(wheelSet1[0], wheelSetEncoder1-10))
+                    && (rbt.hasMotorEncoderReached(rbt.wheelSet2[0], wheelSetEncoder2+10)
+                    || rbt.hasMotorEncoderReached(wheelSet2[0], wheelSetEncoder2-10)
                     )) {
                 Log.d("ENC_TRANSLATE", String.format("(%d,%d) / (%d,%d)",
                         rbt.getEncoderCounts(wheelSet1[0]),
@@ -155,7 +163,7 @@ class StateMachine{
 
             if (rbt.hasMotorEncoderReached(rbt.wheelSetL[0], targetEncoderCounts)
                     && rbt.hasMotorEncoderReached(rbt.wheelSetR[0], targetEncoderCounts)) {
-//                Log.d(TAG,"turn: counts: "+rbt.getEncoderCounts(rbt.wheelSet1[0]));
+                Log.d(TAG,"turn: counts: "+rbt.getEncoderCounts(rbt.wheelSet1[0]));
 
                 Log.d(TAG, "MOTOR Front Left "+rbt.getEncoderCounts("mtrFrontLeft"));
                 Log.d(TAG, "MOTOR Front Right "+rbt.getEncoderCounts("mtrFrontRight"));

@@ -67,7 +67,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
         }
 
-        m.translate(0,.5, 10);
+        m.translate(0,.5, 20);
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();

@@ -62,9 +62,9 @@ class Robot{
             {"mtrBackRight","R"},   //Wheel Set 1
             {"mtrBackLeft","F"},    //Wheel Set 2
             {"mtrFrontRight","R"},  //Wheel Set 2
-            {"mtrCollectionLeft"},
-            {"mtrCollectionRight"},
-            {"mtrLift"}
+            {"mtrCollectionLeft","F"},
+            {"mtrCollectionRight","R"},
+            {"mtrLift","F"}
     };
 
     String[][] senList = {
@@ -74,7 +74,9 @@ class Robot{
     };
     String[][] srvList = {
             {"srvClamp"},
-            {"srvRotator"}
+            {"srvRotator"},
+            {"srvVert"},
+            {"srvConveyor"}
     };
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
@@ -207,7 +209,7 @@ class Robot{
 
     public void resetDriveEncoders() {
         resetEncoder(wheelSet1[0]);
-        resetEncoder(wheelSet1[1]);
+        //resetEncoder(wheelSet1[1]);
         resetEncoder(wheelSet2[0]);
         resetEncoder(wheelSet2[1]);
     }
@@ -221,14 +223,14 @@ class Robot{
 
     public void setDriveEncoderTarget(int ws1Target, int ws2Target) {
         setTarget(wheelSet1[0], ws1Target);
-        setTarget(wheelSet1[1], ws1Target);
+        //setTarget(wheelSet1[1], ws1Target);
         setTarget(wheelSet2[0], ws2Target);
         setTarget(wheelSet2[1], ws2Target);
     }
 
     public void setDriveRunMode(DcMotor.RunMode rm) {
         setRunMode(wheelSet1[0], rm);
-        setRunMode(wheelSet1[1],rm);
+        //setRunMode(wheelSet1[1],rm);
         setRunMode(wheelSet2[0], rm);
         setRunMode(wheelSet2[1],rm);
     }

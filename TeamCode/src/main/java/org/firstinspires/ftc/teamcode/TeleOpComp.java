@@ -45,7 +45,7 @@ public class TeleOpComp extends OpMode {
 
 //          ****************************Driving Controls********************************************
 
-            //No turning while translating
+            //If not rotating
             if (Math.abs(gamepad1.right_stick_x) < 0.05) {
 
                 double x = gamepad1.left_stick_x;
@@ -62,19 +62,19 @@ public class TeleOpComp extends OpMode {
                     theta1 = Math.atan(y / x) + Math.PI;
                 }
                 double theta2 = Math.PI / 4 - theta1;
-
-                r.setPower(r.wheelSet1[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
-                r.setPower(r.wheelSet2[0], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
-                r.setPower(r.wheelSet1[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? Math.sqrt(x * x + y * y) * Math.cos(theta2) : 0);
-                r.setPower(r.wheelSet2[1], Math.abs(x) > .05 || Math.abs(y) > .05 ? -Math.sqrt(x * x + y * y) * Math.sin(theta2) : 0);
+                double hyp = Math.sqrt(x * x + y * y);
+                boolean motorBand = Math.abs(x) > .05 || Math.abs(y)> .05;
+                double speedControl = gamepad1.right_bumper ? .75 : gamepad1.right_trigger > .5 ? .25 : .5;
+                r.setPower(r.wheelSet1[0], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet2[0], motorBand ? -hyp * Math.sin(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet1[1], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet2[1], motorBand ? -hyp * Math.sin(theta2) * speedControl : 0);
 
             }else {
-                double x = gamepad1.right_stick_x;
-                double y = gamepad1.right_stick_y;
-                r.setPower(r.wheelSetL[0], gamepad1.right_trigger > .5 ? x*.25 : gamepad1.right_bumper ? x*.75: x *.5);
-                r.setPower(r.wheelSetL[1], gamepad1.right_trigger > .5 ? x*.25 : gamepad1.right_bumper ? x*.75: x *.5);
-                r.setPower(r.wheelSetR[0], -gamepad1.right_trigger > .5 ? x*.25 : gamepad1.right_bumper ? x*.75: x *.5);
-                r.setPower(r.wheelSetR[1], -gamepad1.right_trigger > .5 ? x*.25 : gamepad1.right_bumper ? x*.75: x *.5);
+                r.setPower(r.wheelSetL[0], gamepad1.right_stick_x);
+                r.setPower(r.wheelSetL[1], gamepad1.right_stick_x);
+                r.setPower(r.wheelSetR[0], -gamepad1.right_stick_x);
+                r.setPower(r.wheelSetR[1], -gamepad1.right_stick_x);
             }
 
 //          ***************************Collector Controls*******************************************
@@ -82,14 +82,12 @@ public class TeleOpComp extends OpMode {
             if(gamepad1.left_bumper && !OSCollection){
                 OSCollection = true;
                 r.setPower("mtrCollectionLeft", collectionSpeed);
-                r.setPower("mtrCollectionRight", -collectionSpeed);
-            }
-            if(!gamepad1.left_bumper && OSCollection){
+                r.setPower("mtrCollectionRight", collectionSpeed);
+            } else {
                 OSCollection = false;
                 r.setPower("mtrCollectionLeft",0);
                 r.setPower("mtrCollectionRight",0);
             }
-
 
 //          ****************************************************************************************
 //            Gamepad Two Controls
@@ -111,20 +109,22 @@ public class TeleOpComp extends OpMode {
             }
 
             //up and down functionality.............................................................
-
+            //Make lift function that tracks level instead of encoder counts and raises or lowers accordingly
             //up
             if(gamepad2.dpad_up && !(levelEncoders>17000) && !OSLift){
                 OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders+=200,liftSpeed);
+                r.initRunToTarget("mtrLift", levelEncoders+=3000,liftSpeed);
+            } else {
+                OSLift = false;
             }
-            if(!gamepad2.dpad_up && OSLift){OSLift = false;}
 
             //down
             if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
-                OSLift = false;
+                OSLift = true;
                 r.initRunToTarget("mtrLift", levelEncoders-=200,liftSpeed);
+            } else {
+                OSLift = false;
             }
-            if(!gamepad2.dpad_down && OSLift){OSLift = false;}
 
 //          *************************************Toggles********************************************
 
@@ -145,15 +145,12 @@ public class TeleOpComp extends OpMode {
             //Conveyor..............................................................................
 
             //on
-            if(gamepad2.y && !OSConveyor){
+            if(gamepad2.y && !OSConveyor) {
                 OSConveyor = true;
-                r.setPower("mtrConveyor",conveyorSpeed);
-            }
-
-            //off
-            if(!gamepad2.y && OSConveyor){
+                r.setPower("srvConveyor", conveyorSpeed);
+            } else {
                 OSConveyor = false;
-                r.setPower("mtrConveyor", 0);
+                r.setPower("srvConveyor", 0);
             }
 
             //Rotator...............................................................................
@@ -162,10 +159,7 @@ public class TeleOpComp extends OpMode {
             if(gamepad2.x && !OSRotator){
                 OSRotator = true;
                 r.setServoPosition("srvRotator",rotatorIn);
-            }
-
-            //b - out
-            if(gamepad2.b && OSRotator){
+            } else if(gamepad2.x && OSRotator) {
                 OSRotator = false;
                 r.setServoPosition("srvRotator", rotatorOut);
             }
