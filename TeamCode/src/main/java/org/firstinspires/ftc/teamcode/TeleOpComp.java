@@ -114,7 +114,7 @@ public class TeleOpComp extends OpMode {
             if(gamepad2.dpad_up && !(levelEncoders>17000) && !OSLift){
                 OSLift = true;
                 r.initRunToTarget("mtrLift", levelEncoders+=3000,liftSpeed);
-            } else {
+            } else if (!gamepad2.dpad_up) {
                 OSLift = false;
             }
 
@@ -122,7 +122,7 @@ public class TeleOpComp extends OpMode {
             if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
                 OSLift = true;
                 r.initRunToTarget("mtrLift", levelEncoders-=200,liftSpeed);
-            } else {
+            } else if(!gamepad2.dpad_down) {
                 OSLift = false;
             }
 
@@ -148,7 +148,7 @@ public class TeleOpComp extends OpMode {
             if(gamepad2.y && !OSConveyor) {
                 OSConveyor = true;
                 r.setPower("srvConveyor", conveyorSpeed);
-            } else {
+            } else if (!gamepad2.y) {
                 OSConveyor = false;
                 r.setPower("srvConveyor", 0);
             }
@@ -159,7 +159,7 @@ public class TeleOpComp extends OpMode {
             if(gamepad2.x && !OSRotator){
                 OSRotator = true;
                 r.setServoPosition("srvRotator",rotatorIn);
-            } else if(gamepad2.x && OSRotator) {
+            } else if(!gamepad2.x) {
                 OSRotator = false;
                 r.setServoPosition("srvRotator", rotatorOut);
             }
@@ -168,13 +168,17 @@ public class TeleOpComp extends OpMode {
 
 
             //clamp adjustment......................................................................
-            if(gamepad2.left_stick_y > 0.05){
+            if(Math.abs(gamepad2.left_stick_y) > 0.05){
                 r.setServoPosition("srvClamp", gamepad2.left_stick_y);
+            } else {
+                r.setServoPosition("srvClamp",0);
             }
 
             //lift adjustment.......................................................................
-            if(gamepad2.right_stick_y > 0.05){
+            if(Math.abs(gamepad2.right_stick_y) > 0.05){
                 r.setPower("mtrLift",gamepad2.right_stick_y);
+            } else {
+                r.setPower("mtrLift",0);
             }
 
         }
@@ -183,7 +187,6 @@ public class TeleOpComp extends OpMode {
             auto = true;
             m.reset();
             r.resetDriveEncoders();
-
         }
 
         /*
