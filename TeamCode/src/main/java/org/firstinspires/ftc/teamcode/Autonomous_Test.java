@@ -17,6 +17,7 @@ public class Autonomous_Test extends OpMode {
     String skyCase = "left";
     boolean foundationSide, n  = false;
     double safeSpeed = .7;
+    int redThresh = 100;
 
     @Override
     public void init() {
@@ -92,8 +93,6 @@ public class Autonomous_Test extends OpMode {
                 case "right":
                     try {
                         sm.translate(-26, safeSpeed, 22);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(13);
 
@@ -104,8 +103,6 @@ public class Autonomous_Test extends OpMode {
                 case "left":
                     try {
                         sm.translate(24, safeSpeed, 21);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(0);
                     } catch (Exception e) {
@@ -115,8 +112,6 @@ public class Autonomous_Test extends OpMode {
                 default:
                     try {
                         sm.translate(-10, safeSpeed, 20);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(8);
                     } catch (Exception e) {

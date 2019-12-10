@@ -166,9 +166,21 @@ class Robot{
         }
     }
 
+    public void initRunToTarget(String motorName, int target, double power) {
+        if (motors.get(motorName) != null) {
+            setTarget(motorName, target);
+            setPower(motorName, power);
+        } else {
+            Log.e(TAG, "initRunToTarget: failed to run motor: " + motorName + " to target: " + target + " at power: " + power);
+        }
+    }
 
-
-
+    public void initRunToTarget(String motorName, int target, double power, boolean reset) {
+        if (motors.get(motorName) != null) {
+            if (reset) resetEncoder(motorName);
+            initRunToTarget(motorName, target, power);
+        }
+    }
 
     public Integer getColorValue(String sensor, String channel) {
         if (sensors.get(sensor) != null && sensors.get(sensor) instanceof ColorSensor) {
@@ -248,6 +260,23 @@ class Robot{
 //        Log.d(TAG, "calculateVelocity: current velocity: " + currentVelocity);
 //        return currentVelocity;
 //    }
+
+    public void setServoPosition(String servoName, double position) {
+        Object servo = servos.get(servoName);
+        if (servo != null) {
+            if (servo instanceof Servo) ((Servo) servo).setPosition(position);
+            else if (servo instanceof CRServo) setServoPower(servoName, position);
+        } else Log.e(TAG, "setServoPosition: servo is null: " + servoName);
+    }
+
+    public void setServoPower( String servoName, double power) {
+        Object servo = servos.get(servoName);
+        if (servo != null) {
+            if (servo instanceof CRServo) ((CRServo) servo).setPower(power);
+            else if (servo instanceof Servo) setServoPosition(servoName, power);
+
+        } else Log.e(TAG, "setServoPower: CR servo is null: " + servoName);
+    }
 
     public Boolean hasMotorEncoderReached( String motorName, int encoderCount) {
         return (motors.get(motorName) != null) ? Math.abs(getEncoderCounts(motorName)) >= Math.abs(encoderCount) : null;
