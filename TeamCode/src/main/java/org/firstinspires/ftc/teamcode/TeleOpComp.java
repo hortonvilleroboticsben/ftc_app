@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name = "TeleOpComp", group ="Comp")
@@ -12,12 +11,15 @@ public class TeleOpComp extends OpMode {
     public boolean auto = false;
     StateMachine m = new StateMachine();
     double theta1 = 0;
-    boolean OSCollection, OSLift, OSConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
+    boolean OSCollection, OSLift, OSConveyor, OSClamp, OSRotator = false;
     int levelEncoders = 600; //may have to adjust
     double collectionSpeed = .6;
     double liftSpeed = .6;
+    double conveyorSpeed = .6;
     double clampOpen = 0.4;
-    double clampClosed = 0.175;;
+    double clampClosed = 0.175;
+    double rotatorIn = 1;
+    double rotatorOut = 0;
 
     @Override
     public void init() {
@@ -119,7 +121,7 @@ public class TeleOpComp extends OpMode {
             //down
             if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
                 OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders-=3000,liftSpeed);
+                r.initRunToTarget("mtrLift", levelEncoders-=200,liftSpeed);
             } else if(!gamepad2.dpad_down) {
                 OSLift = false;
             }
@@ -129,15 +131,15 @@ public class TeleOpComp extends OpMode {
             //Clamp.................................................................................
 
             //open
-            if(gamepad2.a && !gamepad2.start && !OSClamp){
+            if(gamepad2.a && !gamepad2.start && !gamepad1.start && !OSClamp){
                 OSClamp = true;
-                openClamp = !openClamp;
-            } else if(!gamepad2.a) OSClamp = false;
+                r.setServoPosition("srvClamp", clampOpen);
+            }
 
-            if(openClamp){
-                r.setServoPosition("srvClamp",.6);
-            } else {
-                r.setServoPosition("srvClamp",.2);
+            //closed
+            if(gamepad2.a && !gamepad2.start && !gamepad1.start && OSClamp){
+                OSClamp = false;
+                r.setServoPosition("srvClamp", clampClosed);
             }
 
             //Conveyor..............................................................................
@@ -145,25 +147,21 @@ public class TeleOpComp extends OpMode {
             //on
             if(gamepad2.y && !OSConveyor) {
                 OSConveyor = true;
-                r.setServoPower("srvConveyor",.6 );
+                r.setPower("srvConveyor", conveyorSpeed);
             } else if (!gamepad2.y) {
                 OSConveyor = false;
-                r.setServoPower("srvConveyor", 0);
+                r.setPower("srvConveyor", 0);
             }
-
 
             //Rotator...............................................................................
 
             //x - in
-            if(gamepad2.x && OSRotator){
+            if(gamepad2.x && !OSRotator){
+                OSRotator = true;
+                r.setServoPosition("srvRotator",rotatorIn);
+            } else if(!gamepad2.x) {
                 OSRotator = false;
-                openRotator = !openRotator;
-            } else if(!gamepad2.x) OSRotator = true;
-
-            if(openRotator){
-                r.setServoPosition("srvRotator", .2);
-            } else {
-                r.setServoPosition("srvRotator", .9);
+                r.setServoPosition("srvRotator", rotatorOut);
             }
 
 //          **********************************Stick Adjustments*************************************
@@ -171,7 +169,7 @@ public class TeleOpComp extends OpMode {
 
             //clamp adjustment......................................................................
             if(Math.abs(gamepad2.left_stick_y) > 0.05){
-                r.setServoPosition("srvClamp", Math.abs(gamepad2.left_stick_y));
+                r.setServoPosition("srvClamp", gamepad2.left_stick_y);
             } else {
                 r.setServoPosition("srvClamp",0);
             }
@@ -204,9 +202,6 @@ public class TeleOpComp extends OpMode {
         telemetry.addData("mtrFrontRight", r.getEncoderCounts("mtrFrontRight"));
         telemetry.addData("mtrBackLeft", r.getEncoderCounts("mtrBackLeft"));
         telemetry.addData("mtrBackRight", r.getEncoderCounts("mtrBackRight"));
-
-        telemetry.addData("Clamp",((Servo) r.servos.get("srvClamp")).getPosition());
-        telemetry.addData("Rotator",((Servo) r.servos.get("srvRotator")).getPosition());
 
         telemetry.addData("theta1", theta1 * 180 / Math.PI);
         telemetry.addData("SIP", m.state_in_progress);

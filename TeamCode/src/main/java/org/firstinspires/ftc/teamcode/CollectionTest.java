@@ -35,12 +35,15 @@ public class CollectionTest extends OpMode {
         if(gamepad1.a && closedFlapOS){
             closedFlapOS = false;
             closedFlap = !closedFlap;
+            telemetry.addData("CLOSED FLAP", closedFlap);
         } else if(!gamepad1.a) closedFlapOS = true;
 
         if(closedFlap){
             flapArm.setPosition(flapClosedPos);
+            telemetry.addData("FLAP-ARM CLOSE",flapArm.getPosition());
         } else {
             flapArm.setPosition(flapOpenPos);
+            telemetry.addData("FLAP-ARM OPEN",flapArm.getPosition());
         }
 
         //Rotator Control - OS Toggle
