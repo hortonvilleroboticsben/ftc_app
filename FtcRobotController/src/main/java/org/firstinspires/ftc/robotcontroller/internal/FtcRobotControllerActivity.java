@@ -40,6 +40,8 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
@@ -131,6 +133,8 @@ public class FtcRobotControllerActivity extends Activity
   {
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
+
+  public CameraManager cameraManager;
 
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final int NUM_GAMEPADS = 2;
@@ -264,6 +268,8 @@ public class FtcRobotControllerActivity extends Activity
     if (enforcePermissionValidator()) {
       return;
     }
+
+    cameraManager = (CameraManager)getSystemService(Context.CAMERA_SERVICE);
 
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
@@ -811,5 +817,11 @@ public class FtcRobotControllerActivity extends Activity
     if (wifiMuteStateMachine != null) {
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
+  }
+  public Activity getActivity(){
+    return FtcRobotControllerActivity.this;
+  }
+  public CameraManager getCameraManager(){
+    return cameraManager;
   }
 }

@@ -11,10 +11,12 @@ public class Autonomous_Test extends OpMode {
 
     Robot r;
     StateMachine sm = new StateMachine();
+    StateMachine lazy = new StateMachine();
+    StateMachine lazy2 = new StateMachine();
+
     String skyCase = "left";
-    boolean foundationSide, skyStone = false;
+    boolean foundationSide, n  = false;
     double safeSpeed = .7;
-    int redThresh = 100;
 
     @Override
     public void init() {
@@ -24,16 +26,46 @@ public class Autonomous_Test extends OpMode {
 
     @Override
     public void init_loop(){
-        sm.initializeMachine();
+        lazy.initializeMachine();
+        lazy2.initializeMachine();
 
-        if(sm.next_state_to_execute()) {
+        if(lazy.next_state_to_execute()) {
             telemetry.addData("Foundation Side", "A For Yes : B For No");
-            if(gamepad1.a && !gamepad1.start && !foundationSide){
-                foundationSide = true;
-            } else if(!gamepad1.a){
-                sm.incrementState();
+            if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start && !gamepad2.start) {
+                foundationSide = gamepad1.a;
+                n = true;
+            }
+            if (n && !gamepad1.a && !gamepad1.b) {
+                n = false;
+                lazy.incrementState();
             }
         }
+
+        //This following code until the telemetry will not need to be implemented once the vision code is implemented
+        if(lazy2.next_state_to_execute()) {
+            telemetry.addData("SkyStone", "Left Trigger For Left : Left Bumper For Center : Right Trigger For Right");
+            if ((gamepad1.a ^ gamepad1.left_trigger > .05) && !gamepad1.start && !gamepad2.start && !n) {
+                skyCase = "left";
+                n = true;
+            }
+
+            if((gamepad1.a ^ gamepad1.left_bumper) && !gamepad1.start && !gamepad2.start && !n){
+                skyCase = "center";
+                n=true;
+            }
+
+            if ((gamepad1.a ^ gamepad1.right_trigger > .05) && !gamepad1.start && !gamepad2.start && !n) {
+                skyCase = "right";
+                n = true;
+            }
+
+            if (n && !gamepad1.a && !gamepad1.b && gamepad1.right_trigger < 0.05 && !gamepad1.left_bumper && gamepad1.left_trigger < 0.05) {
+                n = false;
+                lazy2.incrementState();
+            }
+        }
+        telemetry.addData("Foundation Side", foundationSide+"");
+        telemetry.addData("SkyCase", skyCase+"");
     }
 
     @Override
@@ -60,6 +92,8 @@ public class Autonomous_Test extends OpMode {
                 case "right":
                     try {
                         sm.translate(-26, safeSpeed, 22);
+                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(13);
 
@@ -70,6 +104,8 @@ public class Autonomous_Test extends OpMode {
                 case "left":
                     try {
                         sm.translate(24, safeSpeed, 21);
+                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(0);
                     } catch (Exception e) {
@@ -79,6 +115,8 @@ public class Autonomous_Test extends OpMode {
                 default:
                     try {
                         sm.translate(-10, safeSpeed, 20);
+                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
                         sm.pause(500);
                         laps(8);
                     } catch (Exception e) {

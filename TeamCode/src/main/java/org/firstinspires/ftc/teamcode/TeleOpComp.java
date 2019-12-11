@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+/*package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -196,9 +196,9 @@ public class TeleOpComp extends OpMode {
             r.resetDriveEncoders();
         }
 
-        /*
+        *//*
         place autonomous code for teleop here
-         */
+         *//*
 
         if(m.next_state_to_execute() && auto){
             auto = false;
@@ -218,4 +218,4 @@ public class TeleOpComp extends OpMode {
         telemetry.addData("SIP", m.state_in_progress);
         telemetry.addData("Auto", auto);
     }
-}
+}*/

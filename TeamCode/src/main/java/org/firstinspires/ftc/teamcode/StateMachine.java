@@ -92,6 +92,23 @@ class StateMachine{
             incrementState();
         }
     }
+
+    public void initRunToTarget(String motorName, int target, double power) {
+        if (rbt.motors.get(motorName) != null) {
+            rbt.setTarget(motorName, target);
+            rbt.setPower(motorName, power);
+        } else {
+            Log.e(TAG, "initRunToTarget: failed to run motor: " + motorName + " to target: " + target + " at power: " + power);
+        }
+    }
+
+    public void initRunToTarget(String motorName, int target, double power, boolean reset) {
+        if (rbt.motors.get(motorName) != null) {
+            if (reset) rbt.resetEncoder(motorName);
+            initRunToTarget(motorName, target, power);
+        }
+    }
+
 //    <<------------------------------ Mecanum Wheels --------------------------------->>
 
 
@@ -151,10 +168,10 @@ class StateMachine{
             int targetEncoderCounts = (int) (wheelRotations * countsPerRotation);
             Log.d(TAG, "MOTOR turn: Target counts: " + targetEncoderCounts);
 
-            rbt.initRunToTarget(rbt.wheelSetL[0], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
-            rbt.initRunToTarget(rbt.wheelSetL[1], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
-            rbt.initRunToTarget(rbt.wheelSetR[0], (int) (Math.signum(degrees) * targetEncoderCounts), power);
-            rbt.initRunToTarget(rbt.wheelSetR[1], (int) (Math.signum(degrees) * targetEncoderCounts), power);
+            initRunToTarget(rbt.wheelSetL[0], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
+            initRunToTarget(rbt.wheelSetL[1], (int) (-Math.signum(degrees) * targetEncoderCounts), power);
+            initRunToTarget(rbt.wheelSetR[0], (int) (Math.signum(degrees) * targetEncoderCounts), power);
+            initRunToTarget(rbt.wheelSetR[1], (int) (Math.signum(degrees) * targetEncoderCounts), power);
 
             Log.d(TAG, "BMOTOR Front Left "+rbt.getEncoderCounts("mtrFrontLeft"));
             Log.d(TAG, "BMOTOR Front Right "+rbt.getEncoderCounts("mtrFrontRight"));
