@@ -18,7 +18,7 @@ dependencies {
     implementation ('org.boofcv:boofcv-all:0.34'){
         //exclude group: 'org.apache.commons', module: 'commons-compress'
         exclude group: 'org.rauschig', module: 'jarchivelib'
-        exclude group: 'org.slf4j', module: 'slfd4j-api'
+        exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
 }
