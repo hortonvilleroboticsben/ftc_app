@@ -75,7 +75,9 @@ class Robot{
     String[][] srvList = {
             {"srvClamp","p"},
             {"srvRotator","p"},
-            {"srvConveyor","c"}
+            {"srvConveyor","c"},
+            {"srvFlip","p"},
+            {"flip","p"}
     };
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
