@@ -72,9 +72,7 @@ public class Autonomous_Test extends OpMode {
     public void loop() {
         sm.initializeMachine();
 
-        /*
-        Insert Image Processing Code In This Section
-         */
+
 
         if (!foundationSide) {
             /*

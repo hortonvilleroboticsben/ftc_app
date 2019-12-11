@@ -56,7 +56,7 @@ public class ImageAnalyzer {
 
 
 
-    public int analyze(Context c, byte[] bytes, TextureView imageView, TextView textView, TextView widthTV, TextView heightTV) {
+    public int analyze(TextureView imageView) {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
@@ -84,12 +84,12 @@ public class ImageAnalyzer {
         otherCanvas.drawBitmap(result, null, new Rect(x, y, x + size, y + size), bitmapPaint);*/
 
 
-        Toast.makeText(c, "Receive Bitmap", Toast.LENGTH_LONG).show();
-        if (bytes!=null){
+        //Toast.makeText(c, "Receive Bitmap", Toast.LENGTH_LONG).show();
+        /*if (bytes!=null){
             Toast.makeText(c, "Bytes has a value", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(c, "Bytes is equal to null", Toast.LENGTH_LONG).show();
-        }
+        }*/
 
         //convert bytes to bitmap then i guess
         //ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
@@ -110,14 +110,14 @@ public class ImageAnalyzer {
 
 
 
-        Bitmap croppedImg = cropImg(bitmap, c);
+        Bitmap croppedImg = cropImg(bitmap);
 
         //saveImg(croppedImg, new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
 //        saveImg(blurImg(croppedImg), new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
 
 
         //return -1;
-        return blurImg(bitmap, c, textView, widthTV, heightTV);
+        return blurImg(bitmap);
     }
     /*public static void saveImg(BufferedImage image, File filePath){
         try {
@@ -127,7 +127,7 @@ public class ImageAnalyzer {
             System.out.println(e);
         }
     }*/
-    public static Bitmap cropImg(Bitmap image, Context context){
+    public static Bitmap cropImg(Bitmap image){
         Bitmap croppedImg = image;
         //Bitmap croppedImg = image.getSubimage(1000, 1350, width, height);
         //saveImg(croppedImg, new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
@@ -135,7 +135,7 @@ public class ImageAnalyzer {
         return croppedImg;
     }
 
-    public static int blurImg(Bitmap bitmap, Context context, TextView textView, TextView widthTV, TextView heightTV){
+    public static int blurImg(Bitmap bitmap){
 
         int x = 50;
         int y = 80;
@@ -223,10 +223,10 @@ public class ImageAnalyzer {
         xAverages = xAverages / count;
 
 
-        textView.setText(xAverages+"");
+        //textView.setText(xAverages+"");
 
 
-        save(bitmap, context);
+        save(bitmap);
         if(xAverages >= 0 && xAverages < 735) {
             //Toast.makeText(context, "2", Toast.LENGTH_LONG).show();
             return 2;
@@ -241,7 +241,7 @@ public class ImageAnalyzer {
         }
         return -1;
     }
-    public static void save(Bitmap bitmap, Context context){
+    public static void save(Bitmap bitmap){
         OutputStream outputStream = null;
         //Bitmap b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
@@ -249,7 +249,7 @@ public class ImageAnalyzer {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
         } catch (Exception e){
-            Toast.makeText(context, e+"", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, e+"", Toast.LENGTH_LONG).show();
         }
 
     }

@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Bitmap;
+import android.hardware.camera2.CameraAccessException;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -200,4 +204,18 @@ class StateMachine{
         }
 
     }
+
+    public void skyStone(){
+        if(next_state_to_execute()) {
+            try {
+
+                Bitmap bitmap = rbt.takePicture();
+                ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
+                int pos = imageAnalyzer.analyze(rbt.imageView);
+            } catch (CameraAccessException c){
+
+            }
+        }
+    }
+
 }

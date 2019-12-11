@@ -406,7 +406,7 @@ class   Robot{
     public Bitmap takePicture() throws CameraAccessException {
         if (cameraDevice == null){
             Log.e(TAG, "cameraDevice is null");
-
+            return null;
         }
 
         //CameraPreview cameraPreview = new CameraPreview()
@@ -468,7 +468,8 @@ class   Robot{
 
                     //b.compress(Bitmap.CompressFormat.JPEG, 100, null);
                     //finalImage = b;
-                    pos = imageAnalyzer.analyze(getActivity(), bytes, imageView, averages, widthTV, heightTV);
+                    pos = imageAnalyzer.analyze(imageView);
+
 
                 } catch (Exception e){
                     Toast.makeText(getActivity(), e+"6465468465", Toast.LENGTH_LONG).show();
