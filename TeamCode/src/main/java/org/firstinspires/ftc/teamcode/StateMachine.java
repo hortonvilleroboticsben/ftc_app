@@ -20,6 +20,7 @@ class StateMachine{
     final int countsPerRotation = 560;
     int current_number = 0;
     int state_in_progress = 1;
+    int pos = 0;
     Timer t = new Timer();
     boolean timerOS = true;
     boolean initOS = true;
@@ -208,10 +209,9 @@ class StateMachine{
     public void skyStone(){
         if(next_state_to_execute()) {
             try {
-
                 Bitmap bitmap = rbt.takePicture();
                 ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
-                int pos = imageAnalyzer.analyze(rbt.imageView);
+                pos = imageAnalyzer.analyze(rbt.imageView);
             } catch (CameraAccessException c){
 
             }

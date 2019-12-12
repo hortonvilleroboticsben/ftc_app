@@ -86,10 +86,7 @@ class   Robot{
 
     File filepath;
 
-    int pos;
-
     TextureView imageView;
-    Button takePic;
 
     TextView averages, heightTV, widthTV;
 
@@ -136,8 +133,7 @@ class   Robot{
             {"srvClamp","p"},
             {"srvRotator","p"},
             {"srvConveyor","c"},
-            {"srvFlip","p"},
-            {"flip","p"}
+            {"srvFlip","p"}
     };
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
@@ -468,7 +464,7 @@ class   Robot{
 
                     //b.compress(Bitmap.CompressFormat.JPEG, 100, null);
                     //finalImage = b;
-                    pos = imageAnalyzer.analyze(imageView);
+                    // pos = imageAnalyzer.analyze(imageView);
 
 
                 } catch (Exception e){
@@ -519,28 +515,6 @@ class   Robot{
             }
         },  backgroundHandler);
         return finalImage;
-    }
-
-    public Bitmap save(byte[] bytes){
-        OutputStream outputStream = null;
-        Bitmap b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-        try (OutputStream out = new FileOutputStream(filepath)){
-            b.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-        } catch (Exception e){
-            Toast.makeText(getActivity(), e+"", Toast.LENGTH_LONG).show();
-        }
-
-        try {
-            outputStream = new FileOutputStream(filepath);
-            outputStream.write(bytes);
-            outputStream.close();
-            Toast.makeText(getActivity(), filepath+"", Toast.LENGTH_LONG).show();
-        } catch (Exception e){
-            Toast.makeText(getActivity(), e+"", Toast.LENGTH_LONG).show();
-        }
-        return b;
     }
 
     public void openCamera(CameraManager cameraManager) throws CameraAccessException, SecurityException{

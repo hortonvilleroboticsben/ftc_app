@@ -11,69 +11,59 @@ public class Autonomous_Test extends OpMode {
 
     Robot r;
     StateMachine sm = new StateMachine();
-    StateMachine lazy = new StateMachine();
-    StateMachine lazy2 = new StateMachine();
-
     String skyCase = "left";
     boolean foundationSide, n  = false;
     double safeSpeed = .7;
+    long wait = 0;
+    boolean waitOS, confirmOS = false;
+    Timer t = new Timer();
 
     @Override
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
+
     }
 
     @Override
     public void init_loop(){
-        lazy.initializeMachine();
-        lazy2.initializeMachine();
-
-        if(lazy.next_state_to_execute()) {
+        sm.initializeMachine();
+        if(sm.next_state_to_execute()) {
             telemetry.addData("Foundation Side", "A For Yes : B For No");
-            if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start && !gamepad2.start) {
+            if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
                 foundationSide = gamepad1.a;
                 n = true;
             }
             if (n && !gamepad1.a && !gamepad1.b) {
                 n = false;
-                lazy.incrementState();
+                sm.incrementState();
             }
         }
-
-        //This following code until the telemetry will not need to be implemented once the vision code is implemented
-        if(lazy2.next_state_to_execute()) {
-            telemetry.addData("SkyStone", "Left Trigger For Left : Left Bumper For Center : Right Trigger For Right");
-            if ((gamepad1.a ^ gamepad1.left_trigger > .05) && !gamepad1.start && !gamepad2.start && !n) {
-                skyCase = "left";
-                n = true;
+        if(sm.next_state_to_execute()){
+            telemetry.addData("Pause?","Dpad Down: -1 Second, Dpad Up: +1 Second");
+            if(gamepad1.dpad_up && !waitOS){
+                waitOS = true;
+                wait+=1000;
+            } else if (gamepad1.dpad_down && !waitOS){
+                waitOS = true;
+                wait-=1000;
+            } else if (!gamepad1.dpad_up && !gamepad1.dpad_down){
+                waitOS = false;
+            } else if (gamepad1.a && !gamepad1.start && !confirmOS){
+                confirmOS = true;
+                sm.incrementState();
+            } else if (!gamepad1.a){
+                confirmOS = false;
             }
-
-            if((gamepad1.a ^ gamepad1.left_bumper) && !gamepad1.start && !gamepad2.start && !n){
-                skyCase = "center";
-                n=true;
-            }
-
-            if ((gamepad1.a ^ gamepad1.right_trigger > .05) && !gamepad1.start && !gamepad2.start && !n) {
-                skyCase = "right";
-                n = true;
-            }
-
-            if (n && !gamepad1.a && !gamepad1.b && gamepad1.right_trigger < 0.05 && !gamepad1.left_bumper && gamepad1.left_trigger < 0.05) {
-                n = false;
-                lazy2.incrementState();
-            }
+            telemetry.addData("Pause Amount:",wait);
         }
         telemetry.addData("Foundation Side", foundationSide+"");
-        telemetry.addData("SkyCase", skyCase+"");
     }
 
     @Override
     public void loop() {
         sm.initializeMachine();
-
-
-
+        sm.pause(wait);
         if (!foundationSide) {
             /*
             Objective:  Travel to correct SkyStone, grab it and take it across the Bridge
@@ -85,9 +75,11 @@ public class Autonomous_Test extends OpMode {
                         **Move Foundation to corner IF TIME
 
                         Place and park under Bridge
-        */
-            switch (skyCase) {
-                case "right":
+            */
+            //sm.skyStone();
+
+            switch (sm.pos) {
+                case 2:
                     try {
                         sm.translate(-26, safeSpeed, 22);
                         sm.initRunToTarget("mtrCollectionLeft",5000,.6);
@@ -99,7 +91,7 @@ public class Autonomous_Test extends OpMode {
                         Log.e("LEFT SKYCASE", "Failure");
                     }
                     break;
-                case "left":
+                case 0:
                     try {
                         sm.translate(24, safeSpeed, 21);
                         sm.initRunToTarget("mtrCollectionLeft",5000,.6);

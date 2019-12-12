@@ -58,6 +58,10 @@ public class MechanumWheelTestTeleOp extends OpMode {
                 r.setPower(r.wheelSetR[0], -gamepad1.right_stick_x);
                 r.setPower(r.wheelSetR[1], -gamepad1.right_stick_x);
             }
+
+            if(Math.abs(gamepad2.left_stick_y) > .5) {
+                r.setServoPosition("srvClamp", gamepad2.left_stick_y);
+            }
         }
 
         if(gamepad1.a && !gamepad1.start){
