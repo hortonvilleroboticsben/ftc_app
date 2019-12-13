@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -12,18 +14,16 @@ public class TeleOpComp extends OpMode {
     public boolean auto = false;
     StateMachine m = new StateMachine();
     double theta1 = 0;
-    boolean OSCollection, OSLift, OSConveyor, runningConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
+    boolean OSCollection, OSspitOut, OSLift, OSConveyor, runningConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
     int levelEncoders = 600; //may have to adjust
-    double collectionSpeed = .6;
-    double liftSpeed = .6;
-    double clampOpen = 0.4;
-    double clampClosed = 0.175;;
 
     @Override
     public void init() {
         m.state_in_progress = 99;
         r = Robot.getInstance();
         r.initialize(this);
+        r.setRunMode("mtrCollectionLeft", DcMotor.RunMode.RUN_USING_ENCODER);
+        r.setRunMode("mtrCollectionRight", DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -76,12 +76,17 @@ public class TeleOpComp extends OpMode {
 
 //          ***************************Collector Controls*******************************************
 
-            if(gamepad1.left_bumper && !OSCollection){
-                OSCollection = true;
-                r.setPower("mtrCollectionLeft", collectionSpeed);
-                r.setPower("mtrCollectionRight", collectionSpeed);
-            } else if(!gamepad1.left_bumper) {
-                OSCollection = false;
+            if(gamepad1.left_bumper){
+                r.setPower("mtrCollectionLeft", .72);
+                r.setPower("mtrCollectionRight", .72);
+            } else {
+                r.setPower("mtrCollectionLeft",0);
+                r.setPower("mtrCollectionRight",0);
+            }
+            if(gamepad1.left_trigger > .05){
+                r.setPower("mtrCollectionLeft",-.6);
+                r.setPower("mtrCollectionRight",-.6);
+            } else {
                 r.setPower("mtrCollectionLeft",0);
                 r.setPower("mtrCollectionRight",0);
             }
@@ -106,21 +111,21 @@ public class TeleOpComp extends OpMode {
 
             if(gamepad2.dpad_up && !(levelEncoders>17000) && !OSLift){
                 OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders+=8000,liftSpeed);
+                r.initRunToTarget("mtrLift", levelEncoders+=8000,.6);
             } else if (!gamepad2.dpad_up) {
                 OSLift = false;
             }
 
             if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
                 OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders-=8000,liftSpeed);
+                r.initRunToTarget("mtrLift", levelEncoders-=8000,.6);
             } else if(!gamepad2.dpad_down) {
                 OSLift = false;
             }
 
 //          *************************************Toggles********************************************
 
-            if(gamepad2.a && !gamepad2.start && !OSClamp){
+            if(gamepad2.a && !OSClamp){
                 OSClamp = true;
                 openClamp = !openClamp;
             } else if(!gamepad2.a) OSClamp = false;
@@ -132,7 +137,7 @@ public class TeleOpComp extends OpMode {
             }
 
             //Conveyor..............................................................................
-
+            //.1 power is pull inwards, as you approach .5, it slows down to a stop. as you approach .9 pulls outward towards a stop
             if(gamepad2.y && !OSConveyor) {
                 OSConveyor = true;
                 runningConveyor = !runningConveyor;
@@ -140,7 +145,7 @@ public class TeleOpComp extends OpMode {
                 OSConveyor = false;
             }
             if(runningConveyor){
-                r.setServoPower("srvConveyor",.6 );
+                r.setServoPower("srvConveyor",-.5 );
             } else {
                 r.setServoPower("srvConveyor",0 );
 
@@ -153,7 +158,7 @@ public class TeleOpComp extends OpMode {
             } else if(!gamepad2.x) OSRotator = false;
 
             if(openRotator){
-                r.setServoPosition("srvRotator", .9);
+                r.setServoPosition("srvRotator", 1);
             } else {
                 r.setServoPosition("srvRotator", .2);
             }
@@ -176,26 +181,29 @@ public class TeleOpComp extends OpMode {
             }
 
         }
-
-        if(gamepad1.a && !gamepad1.start){
-            auto = true;
-            m.reset();
-            r.resetDriveEncoders();
-        }
-
-
-        //place autonomous code for teleop here
-
-        if(m.next_state_to_execute() && auto){
-            auto = false;
-            m.incrementState();
-        }
+// Automous In TeleOp
+//        if(gamepad1.a && !gamepad1.start){
+//            auto = true;
+//            m.reset();
+//            r.resetDriveEncoders();
+//        }
+//
+//
+//        //place autonomous code for teleop here
+//
+//        if(m.next_state_to_execute() && auto){
+//            auto = false;
+//            m.incrementState();
+//        }
 
         telemetry.addData("mtrFrontLeft", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrFrontRight", r.getEncoderCounts("mtrFrontRight"));
         telemetry.addData("mtrBackLeft", r.getEncoderCounts("mtrBackLeft"));
         telemetry.addData("mtrBackRight", r.getEncoderCounts("mtrBackRight"));
 
+        telemetry.addData("Clamp Position:",((Servo)r.servos.get("srvClamp")).getPosition());
+        telemetry.addData("Rotator Position:",((Servo)r.servos.get("srvRotator")).getPosition());
+        //                                                                                                                                                                          telemetry.addData("Conveyor Power:",((CRServo)r.servos.get("srvConveyor")).getPower());
 
         telemetry.addData("theta1", theta1 * 180 / Math.PI);
         telemetry.addData("SIP", m.state_in_progress);
