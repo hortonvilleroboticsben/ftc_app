@@ -14,8 +14,7 @@ public class TeleOpComp extends OpMode {
     public boolean auto = false;
     StateMachine m = new StateMachine();
     double theta1 = 0;
-    boolean OSCollection, OSspitOut, OSLift, OSConveyor, runningConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
-    int levelEncoders = 600; //may have to adjust
+    boolean OSConveyor, runningConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
 
     @Override
     public void init() {
@@ -61,7 +60,7 @@ public class TeleOpComp extends OpMode {
                 double theta2 = Math.PI / 4 - theta1;
                 double hyp = Math.sqrt(x * x + y * y);
                 boolean motorBand = Math.abs(x) > .05 || Math.abs(y)> .05;
-                double speedControl = gamepad1.right_bumper ? .75 : gamepad1.right_trigger > .5 ? .25 : .5;
+                double speedControl = gamepad1.right_bumper ? 1 : gamepad1.right_trigger > .5 ? .25 : .5;
                 r.setPower(r.wheelSet1[0], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
                 r.setPower(r.wheelSet2[0], motorBand ? -hyp * Math.sin(theta2) * speedControl : 0);
                 r.setPower(r.wheelSet1[1], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
@@ -76,20 +75,23 @@ public class TeleOpComp extends OpMode {
 
 //          ***************************Collector Controls*******************************************
 
-            if(gamepad1.left_bumper){
+            if(gamepad1.left_bumper) {
                 r.setPower("mtrCollectionLeft", .72);
                 r.setPower("mtrCollectionRight", .72);
-            } else {
-                r.setPower("mtrCollectionLeft",0);
-                r.setPower("mtrCollectionRight",0);
-            }
-            if(gamepad1.left_trigger > .05){
+            }else if(gamepad1.left_trigger > 0.5){
                 r.setPower("mtrCollectionLeft",-.6);
                 r.setPower("mtrCollectionRight",-.6);
             } else {
                 r.setPower("mtrCollectionLeft",0);
                 r.setPower("mtrCollectionRight",0);
             }
+//            if(gamepad1.left_trigger > .05){
+//                r.setPower("mtrCollectionLeft",-.6);
+//                r.setPower("mtrCollectionRight",-.6);
+//            } else {
+//                r.setPower("mtrCollectionLeft",0);
+//                r.setPower("mtrCollectionRight",0);
+//            }
 
 //          ****************************************************************************************
 //            Gamepad Two Controls
@@ -109,19 +111,19 @@ public class TeleOpComp extends OpMode {
                 r.resetEncoder("mtrLift");
             }
 
-            if(gamepad2.dpad_up && !(levelEncoders>17000) && !OSLift){
-                OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders+=8000,.6);
-            } else if (!gamepad2.dpad_up) {
-                OSLift = false;
-            }
-
-            if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
-                OSLift = true;
-                r.initRunToTarget("mtrLift", levelEncoders-=8000,.6);
-            } else if(!gamepad2.dpad_down) {
-                OSLift = false;
-            }
+//            if(gamepad2.dpad_up && !(levelEncoders>17000) && !OSLift){
+//                OSLift = true;
+//                r.initRunToTarget("mtrLift", levelEncoders+=8000,.6);
+//            } else if (!gamepad2.dpad_up) {
+//                OSLift = false;
+//            }
+//
+//            if(gamepad2.dpad_down && !(levelEncoders<0) && !OSLift){
+//                OSLift = true;
+//                r.initRunToTarget("mtrLift", levelEncoders-=8000,.6);
+//            } else if(!gamepad2.dpad_down) {
+//                OSLift = false;
+//            }
 
 //          *************************************Toggles********************************************
 
@@ -133,7 +135,7 @@ public class TeleOpComp extends OpMode {
             if(openClamp){
                 r.setServoPosition("srvClamp",.6);
             } else {
-                r.setServoPosition("srvClamp",.2);
+                r.setServoPosition("srvClamp",.1);
             }
 
             //Conveyor..............................................................................
@@ -145,7 +147,7 @@ public class TeleOpComp extends OpMode {
                 OSConveyor = false;
             }
             if(runningConveyor){
-                r.setServoPower("srvConveyor",-.5 );
+                r.setServoPower("srvConveyor",-.9 );
             } else {
                 r.setServoPower("srvConveyor",0 );
 
@@ -160,17 +162,23 @@ public class TeleOpComp extends OpMode {
             if(openRotator){
                 r.setServoPosition("srvRotator", 1);
             } else {
-                r.setServoPosition("srvRotator", .2);
+                r.setServoPosition("srvRotator", 0);
             }
 
 //          **********************************Stick Adjustments*************************************
 
 
-            //clamp adjustment......................................................................
-            if(Math.abs(gamepad2.left_stick_y) > 0.05){
-                r.setServoPosition("srvClamp", Math.abs(gamepad2.left_stick_y));
-            } else {
-                r.setServoPosition("srvClamp",0);
+//            //clamp adjustment......................................................................
+//            if(Math.abs(gamepad2.left_stick_y) > 0.05){
+//                r.setServoPosition("srvClamp", Math.abs(gamepad2.left_stick_y));
+//            } else if(Math.abs(gamepad1)) {
+//                r.setServoPosition("srvClamp",0);
+//            }
+
+
+
+            if(gamepad2.left_stick_button){
+                r.setServoPosition("srvFlip",.2);
             }
 
             //lift adjustment.......................................................................

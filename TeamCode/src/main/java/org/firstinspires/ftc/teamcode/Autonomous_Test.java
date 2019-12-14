@@ -22,7 +22,7 @@ public class Autonomous_Test extends OpMode {
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
-
+        r.setServoPosition("srvFlip",.5);
     }
 
     @Override
@@ -61,7 +61,13 @@ public class Autonomous_Test extends OpMode {
     }
 
     @Override
+    public void start(){
+        r.setServoPosition("srvFlip",.2);
+    }
+
+    @Override
     public void loop() {
+        //TO make flip servo flip, use position .2-.3
         sm.initializeMachine();
         sm.pause(wait);
         if (!foundationSide) {
