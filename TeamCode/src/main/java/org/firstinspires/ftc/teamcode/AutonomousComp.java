@@ -13,7 +13,7 @@ public class AutonomousComp extends OpMode {
     StateMachine sm = new StateMachine();
     String AllianceColor = "Blue";
     boolean foundationSide, n  = false;
-    double safeSpeed = .7;
+    double safeSpeed = .55;
     long wait = 0;
     boolean waitOS, confirmOS = false;
     Timer t = new Timer();
@@ -22,7 +22,6 @@ public class AutonomousComp extends OpMode {
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
-        r.setServoPosition("srvFlip",.5);
     }
 
     @Override
@@ -79,13 +78,12 @@ public class AutonomousComp extends OpMode {
 
     @Override
     public void loop() {
-        //TO make flip servo flip, use position .2-.3
         sm.initializeMachine();
         sm.pause(wait);
             if (foundationSide) {
                 sm.translate(90, safeSpeed, 24);
             } else {
-                sm.translate(-90, safeSpeed, 24);
+                sm.translate(-90, safeSpeed, 39);
             }
 
 

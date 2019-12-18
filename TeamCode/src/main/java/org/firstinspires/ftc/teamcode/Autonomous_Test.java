@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -36,6 +33,7 @@ public class Autonomous_Test extends OpMode {
             }
             if (n && !gamepad1.a && !gamepad1.b) {
                 n = false;
+                telemetry.addData("Foundation Side", foundationSide+"");
                 sm.incrementState();
             }
         }
@@ -57,12 +55,12 @@ public class Autonomous_Test extends OpMode {
             }
             telemetry.addData("Pause Amount:",wait);
         }
-        telemetry.addData("Foundation Side", foundationSide+"");
+
     }
 
     @Override
     public void start(){
-        r.setServoPosition("srvFlip",.2);
+
     }
 
     @Override
@@ -70,7 +68,14 @@ public class Autonomous_Test extends OpMode {
         //TO make flip servo flip, use position .2-.3
         sm.initializeMachine();
         sm.pause(wait);
+
+        sm.pause(50);
+
         if (!foundationSide) {
+            sm.translate(-30,0.3, 24);
+        }else {
+            sm.translate(30, 0.3, 24);
+        }
             /*
             Objective:  Travel to correct SkyStone, grab it and take it across the Bridge
 
@@ -84,53 +89,53 @@ public class Autonomous_Test extends OpMode {
             */
             //sm.skyStone();
 
-            switch (sm.pos) {
-                case 2:
-                    try {
-                        sm.translate(-26, safeSpeed, 22);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
-                        sm.pause(500);
-                        laps(13);
-
-                    } catch (Exception e) {
-                        Log.e("LEFT SKYCASE", "Failure");
-                    }
-                    break;
-                case 0:
-                    try {
-                        sm.translate(24, safeSpeed, 21);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
-                        sm.pause(500);
-                        laps(0);
-                    } catch (Exception e) {
-                        Log.e("RIGHT SKYCASE", "Failure");
-                    }
-                    break;
-                default:
-                    try {
-                        sm.translate(-10, safeSpeed, 20);
-                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
-                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
-                        sm.pause(500);
-                        laps(8);
-                    } catch (Exception e) {
-                        Log.e("CENTER/DEFAULT SKYCASE", "Failure");
-                    }
-                    break;
-            }
-
-
-        } else {
-
-        }
+//            switch (sm.pos) {
+//                case 2:
+//                    try {
+//                        sm.translate(-26, safeSpeed, 22);
+//                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+//                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
+//                        sm.pause(500);
+//                        laps(13);
+//
+//                    } catch (Exception e) {
+//                        Log.e("LEFT SKYCASE", "Failure");
+//                    }
+//                    break;
+//                case 0:
+//                    try {
+//                        sm.translate(24, safeSpeed, 21);
+//                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+//                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
+//                        sm.pause(500);
+//                        laps(0);
+//                    } catch (Exception e) {
+//                        Log.e("RIGHT SKYCASE", "Failure");
+//                    }
+//                    break;
+//                default:
+//                    try {
+//                        sm.translate(-10, safeSpeed, 20);
+//                        sm.initRunToTarget("mtrCollectionLeft",5000,.6);
+//                        sm.initRunToTarget("mtrCollectionRight", -5000, .6);
+//                        sm.pause(500);
+//                        laps(8);
+//                    } catch (Exception e) {
+//                        Log.e("CENTER/DEFAULT SKYCASE", "Failure");
+//                    }
+//                    break;
+//            }
+//
+//
+//        } else {
+//
         telemetry.addData("foundationSide", foundationSide+"");
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
         telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
         telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
     }
+
 
     public void laps(double moreDistance){
         sm.translate(90, safeSpeed, 67+moreDistance);

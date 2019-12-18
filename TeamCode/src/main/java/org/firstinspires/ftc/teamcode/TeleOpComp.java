@@ -14,15 +14,13 @@ public class TeleOpComp extends OpMode {
     public boolean auto = false;
     StateMachine m = new StateMachine();
     double theta1 = 0;
-    boolean OSConveyor, runningConveyor, OSClamp, openClamp, OSRotator, openRotator = false;
+    boolean OSClamp, openClamp, OSRotator, openRotator, OSFound, downFound = false;
 
     @Override
     public void init() {
         m.state_in_progress = 99;
         r = Robot.getInstance();
         r.initialize(this);
-        r.setRunMode("mtrCollectionLeft", DcMotor.RunMode.RUN_USING_ENCODER);
-        r.setRunMode("mtrCollectionRight", DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -85,14 +83,6 @@ public class TeleOpComp extends OpMode {
                 r.setPower("mtrCollectionLeft",0);
                 r.setPower("mtrCollectionRight",0);
             }
-//            if(gamepad1.left_trigger > .05){
-//                r.setPower("mtrCollectionLeft",-.6);
-//                r.setPower("mtrCollectionRight",-.6);
-//            } else {
-//                r.setPower("mtrCollectionLeft",0);
-//                r.setPower("mtrCollectionRight",0);
-//            }
-
 //          ****************************************************************************************
 //            Gamepad Two Controls
             //left bumper       lift encoder reset
@@ -138,20 +128,33 @@ public class TeleOpComp extends OpMode {
                 r.setServoPosition("srvClamp",.1);
             }
 
+            //Foundation Clips......................................................................
+            if(gamepad2.y && !OSFound){
+                OSFound = true;
+                downFound = !downFound;
+            } else if (!gamepad2.y) OSFound = false;
+
+            if(downFound){
+                r.setServoPosition("srvFoundL",.6);
+                r.setServoPosition("srvFoundR",.6);
+            } else {
+                r.setServoPosition("srvFoundL",.1);
+                r.setServoPosition("srvFoundR",.1);
+            }
             //Conveyor..............................................................................
             //.1 power is pull inwards, as you approach .5, it slows down to a stop. as you approach .9 pulls outward towards a stop
-            if(gamepad2.y && !OSConveyor) {
-                OSConveyor = true;
-                runningConveyor = !runningConveyor;
-            } else if (!gamepad2.y) {
-                OSConveyor = false;
-            }
-            if(runningConveyor){
-                r.setServoPower("srvConveyor",-.9 );
-            } else {
-                r.setServoPower("srvConveyor",0 );
-
-            }
+//            if(gamepad2.y && !OSConveyor) {
+//                OSConveyor = true;
+//                runningConveyor = !runningConveyor;
+//            } else if (!gamepad2.y) {
+//                OSConveyor = false;
+//            }
+//            if(runningConveyor){
+//                r.setServoPower("srvConveyor",-.9 );
+//            } else {
+//                r.setServoPower("srvConveyor",0 );
+//
+//            }
             //Rotator...............................................................................
 
             if(gamepad2.x && !OSRotator){
@@ -167,19 +170,12 @@ public class TeleOpComp extends OpMode {
 
 //          **********************************Stick Adjustments*************************************
 
-
 //            //clamp adjustment......................................................................
 //            if(Math.abs(gamepad2.left_stick_y) > 0.05){
 //                r.setServoPosition("srvClamp", Math.abs(gamepad2.left_stick_y));
 //            } else if(Math.abs(gamepad1)) {
 //                r.setServoPosition("srvClamp",0);
 //            }
-
-
-
-            if(gamepad2.left_stick_button){
-                r.setServoPosition("srvFlip",.2);
-            }
 
             //lift adjustment.......................................................................
             if(Math.abs(gamepad2.right_stick_y) > 0.05){
