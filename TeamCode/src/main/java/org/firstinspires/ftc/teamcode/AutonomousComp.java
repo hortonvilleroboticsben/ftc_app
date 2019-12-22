@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -12,7 +10,7 @@ public class AutonomousComp extends OpMode {
     Robot r;
     StateMachine sm = new StateMachine();
     String AllianceColor = "Blue";
-    boolean foundationSide, n  = false;
+    boolean foundationSide, OSFound,OSColor = false;
     double safeSpeed = .55;
     long wait = 0;
     boolean waitOS, confirmOS = false;
@@ -31,24 +29,26 @@ public class AutonomousComp extends OpMode {
             telemetry.addData("Foundation Side", "A For Yes : B For No");
             if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
                 foundationSide = gamepad1.a;
-                n = true;
+                OSFound = true;
             }
-            if (n && !gamepad1.a && !gamepad1.b) {
-                n = false;
+            if (OSFound && !gamepad1.a && !gamepad1.b) {
+                OSFound = false;
                 sm.incrementState();
             }
         }
+
         if(sm.next_state_to_execute()) {
-            telemetry.addData("Alliance Color", "A For Red : B For Blue");
+            telemetry.addData("Alliance Color:", "A For Red : B For Blue");
             if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
-                AllianceColor = "Red";
-                n = true;
+                AllianceColor = gamepad1.a ? "Red" : "Blue";
+                OSColor = true;
             }
-            if (n && !gamepad1.a && !gamepad1.b) {
-                n = false;
+            if (OSColor && !gamepad1.a && !gamepad1.b) {
+                OSColor = false;
                 sm.incrementState();
             }
         }
+
         if(sm.next_state_to_execute()){
             telemetry.addData("Pause?","Dpad Down: -1 Second, Dpad Up: +1 Second");
             if(gamepad1.dpad_up && !waitOS){
@@ -65,14 +65,14 @@ public class AutonomousComp extends OpMode {
             } else if (!gamepad1.a){
                 confirmOS = false;
             }
-            telemetry.addData("Pause Amount:",wait);
         }
         telemetry.addData("Foundation Side", foundationSide+"");
+        telemetry.addData("Alliance Color:", AllianceColor);
+        telemetry.addData("Pause Amount:",wait);
     }
 
     @Override
     public void start(){
-        r.setServoPosition("srvFlip",.2);
         sm.reset();
     }
 
@@ -81,31 +81,57 @@ public class AutonomousComp extends OpMode {
         sm.initializeMachine();
         sm.pause(wait);
             if (foundationSide) {
-                sm.translate(90, safeSpeed, 24);
+                sm.translate(0, safeSpeed, 5);
             } else {
-                sm.translate(-90, safeSpeed, 39);
+                sm.translate(0, safeSpeed, 36.75);
+                sm.translate(-90,safeSpeed,3.6 );
+                sm.rotate(-90,safeSpeed);
+                sm.translate(0,safeSpeed,7);
+                //Insert Collection System
+                sm.translate(180,safeSpeed,7);
+                sm.translate(-90,safeSpeed,20);
+                sm.translate(180,1.0,76);
+                sm.rotate(90,safeSpeed);
+                //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
+                //Insert Foundation Servos
+                sm.translate(180,1.0,23);
+                //Pulled Foundation to Building Site ^
+
+                //Go back for Second SkyStone V------------
+
+                //If our alliance is not parked against wall
+                sm.translate(-90,.7,109.5);
+
+                sm.translate(0, safeSpeed, 21.75);
+                sm.translate(90,safeSpeed,5);
+                sm.translate(-90,safeSpeed,5);
+                sm.translate(0, safeSpeed, 6);
+                sm.translate(-90,safeSpeed,3.5);
+                sm.rotate(-90,safeSpeed);
+                sm.translate(0,safeSpeed,7);
+                //Insert Collection System
+                sm.translate(180,safeSpeed,7);
+                sm.translate(-90,safeSpeed,20);
+                sm.translate(180,safeSpeed,77);
             }
-
-
-        telemetry.addData("foundationSide", foundationSide+"");
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
         telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
         telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
     }
 
-    public void laps(double moreDistance){
-        sm.translate(90, safeSpeed, 67+moreDistance);
-        //Travel to Foundation and Place SkyStone
-        sm.pause(500);
-        sm.translate(-90, safeSpeed, 90+moreDistance);
-        //Travel back for second stone
-        sm.pause(500);
-        //Grab second SkyStone
-        sm.translate(90, safeSpeed, 90+moreDistance);
-        //Travel to Foundation & Place Second SkyStone
-        sm.pause(500);
-        sm.translate(-90, safeSpeed, 40);
-        //Park under bridge, ^ no need to change, 40 is same for all
-    }
+//    public void laps(double moreDistance){
+//        sm.translate(90, safeSpeed, 67+moreDistance);
+//        //Travel to Foundation and Place SkyStone
+//        sm.pause(500);
+//        sm.translate(-90, safeSpeed, 90+moreDistance);
+//        //Travel back for second stone
+//        sm.pause(500);
+//        //Grab second SkyStone
+//        sm.translate(90, safeSpeed, 90+moreDistance);
+//        //Travel to Foundation & Place Second SkyStone
+//        sm.pause(500);
+//        sm.translate(-90, safeSpeed, 40);
+//        //Park under bridge, ^ no need to change, 40 is same for all
+//    }
 }

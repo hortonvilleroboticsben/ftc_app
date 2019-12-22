@@ -53,10 +53,10 @@ public class MechanumWheelTestTeleOp extends OpMode {
 
 
             }else {
-                r.setPower(r.wheelSetL[0], gamepad1.right_stick_x);
-                r.setPower(r.wheelSetL[1], gamepad1.right_stick_x);
-                r.setPower(r.wheelSetR[0], -gamepad1.right_stick_x);
-                r.setPower(r.wheelSetR[1], -gamepad1.right_stick_x);
+                r.setPower(r.wheelSetL[0], gamepad1.right_stick_x * .5);
+                r.setPower(r.wheelSetL[1], gamepad1.right_stick_x * .5);
+                r.setPower(r.wheelSetR[0], -gamepad1.right_stick_x * .5);
+                r.setPower(r.wheelSetR[1], -gamepad1.right_stick_x * .5);
             }
 
             if(Math.abs(gamepad2.left_stick_y) > .5) {
