@@ -83,36 +83,60 @@ public class AutonomousComp extends OpMode {
             if (foundationSide) {
                 sm.translate(0, safeSpeed, 5);
             } else {
-                sm.translate(0, safeSpeed, 36.75);
-                sm.translate(-90,safeSpeed,3.6 );
-                sm.rotate(-90,safeSpeed);
-                sm.translate(0,safeSpeed,7);
-                //Insert Collection System
-                sm.translate(180,safeSpeed,7);
-                sm.translate(-90,safeSpeed,20);
-                sm.translate(180,1.0,76);
-                sm.rotate(90,safeSpeed);
-                //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
-                //Insert Foundation Servos
-                sm.translate(180,1.0,23);
-                //Pulled Foundation to Building Site ^
+                if(AllianceColor.equals("Blue")) {
+                    sm.translate(0, safeSpeed, 36.75);
+                    sm.translate(-90, safeSpeed, 3.6);
+                    sm.rotate(-90, safeSpeed);
+                    sm.translate(0, safeSpeed, 7);
+                    //Insert Collection System
+                    sm.translate(180, safeSpeed, 7);
+                    sm.translate(-90, safeSpeed, 20);
+                    sm.translate(180, 1.0, 76);
+                    sm.rotate(90, safeSpeed);
+                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
+                    //Insert Foundation Servos
+                    sm.translate(180, safeSpeed, 22.5);
+                    //Pulled Foundation to Building Site ^
 
-                //Go back for Second SkyStone V------------
+                    //Go back for Second SkyStone V------------
 
-                //If our alliance is not parked against wall
-                sm.translate(-90,.7,109.5);
+                    //If our alliance is not parked against wall
+                    sm.translate(-90, .7, 117); //Add color sensor, to know when we're near the tape
+                    //When see tape, move x amount to the 3rd Skystone
 
-                sm.translate(0, safeSpeed, 21.75);
-                sm.translate(90,safeSpeed,5);
-                sm.translate(-90,safeSpeed,5);
-                sm.translate(0, safeSpeed, 6);
-                sm.translate(-90,safeSpeed,3.5);
-                sm.rotate(-90,safeSpeed);
-                sm.translate(0,safeSpeed,7);
-                //Insert Collection System
-                sm.translate(180,safeSpeed,7);
-                sm.translate(-90,safeSpeed,20);
-                sm.translate(180,safeSpeed,77);
+                    sm.translate(0, safeSpeed / 2, 15);
+                    sm.translate(90, safeSpeed / 2, 10);
+                    //sm.translate(-90, safeSpeed / 2, 3);
+
+                    sm.translate(0, safeSpeed / 2, 10);
+                    sm.translate(-90, safeSpeed / 2, 3.5);
+                    sm.rotate(-90, safeSpeed / 2);
+                    sm.translate(0, safeSpeed / 2, 7);
+                    //Insert Collection System
+                    sm.translate(180, safeSpeed / 2, 7);
+                    sm.translate(-90, safeSpeed / 2, 20);
+                    sm.translate(180, safeSpeed / 2, 77);
+                } else {
+                    sm.translate(0, safeSpeed, 36.75);
+                    sm.translate(90, safeSpeed, 3.6);
+                    sm.rotate(90, safeSpeed);
+                    sm.translate(0, safeSpeed, 7);
+                    //Insert Collection System
+                    sm.translate(180, safeSpeed, 7);
+                    sm.translate(90, safeSpeed, 20);
+                    sm.translate(180, 1.0, 72);
+                    sm.rotate(-90, safeSpeed);
+                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
+                    //Insert Foundation Servos
+                    sm.translate(180, .6, 22);
+                    //Pulled Foundation to Building Site ^
+
+                    //Go back for Second SkyStone V------------
+
+                    //If our alliance is not parked against wall
+                    sm.translate(90, .7, 111); //Add color sensor, to know when we're near the tape
+                    //When see tape, move x amount to the 3rd Skystone
+                }
             }
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
