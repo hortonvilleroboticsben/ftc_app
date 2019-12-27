@@ -125,12 +125,14 @@ class   Robot{
     };
 
     String[][] senList = {
-            {"color","3c"},
-            {"distF","4c"},
-            {"distS","5c"}
+            {"colorFront","0x1a"},
+            {"colorBack","0x3c"},
+            {"distF","0x4c"},
+            {"distS","0x5c"}
     };
     String[][] srvList = {
-            {"srvClamp","p"},
+            {"srvClampLeft","p"},
+            {"srvClampRight","p"},
             {"srvRotator","p"},
             {"srvFoundL","p"},
             {"srvFoundR","p"}
@@ -170,7 +172,7 @@ class   Robot{
                     if (sensor instanceof ColorSensor) {
                         Log.e("ROBOT", "SENSOR IS RIGHT TYPE");
                         sensor = op.hardwareMap.colorSensor.get(sen[0]);
-                        ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1], 16)));
+                        ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1])));
                         ((ColorSensor) sensor).enableLed(true);
                     }
                     sensors.put(sen[0], sensor);

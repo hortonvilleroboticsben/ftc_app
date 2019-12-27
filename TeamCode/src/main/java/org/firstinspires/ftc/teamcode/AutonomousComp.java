@@ -25,6 +25,7 @@ public class AutonomousComp extends OpMode {
     @Override
     public void init_loop(){
         sm.initializeMachine();
+        //Replace these preview questions with a JSON file with the pre-sets
         if(sm.next_state_to_execute()) {
             telemetry.addData("Foundation Side", "A For Yes : B For No");
             if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
@@ -95,18 +96,18 @@ public class AutonomousComp extends OpMode {
                     sm.rotate(90, safeSpeed);
                     //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
                     //Insert Foundation Servos
-                    sm.translate(180, safeSpeed, 22.5);
+                    sm.translate(180, safeSpeed, 23.1);
                     //Pulled Foundation to Building Site ^
 
                     //Go back for Second SkyStone V------------
 
                     //If our alliance is not parked against wall
-                    sm.translate(-90, .7, 117); //Add color sensor, to know when we're near the tape
+                    sm.translate(-94, .7, 117); //Add color sensor, to know when we're near the tape
                     //When see tape, move x amount to the 3rd Skystone
 
-                    sm.translate(0, safeSpeed / 2, 15);
+                    sm.translate(0, safeSpeed / 2, 23);
                     sm.translate(90, safeSpeed / 2, 10);
-                    //sm.translate(-90, safeSpeed / 2, 3);
+                    sm.translate(-90, safeSpeed / 2, 2);
 
                     sm.translate(0, safeSpeed / 2, 10);
                     sm.translate(-90, safeSpeed / 2, 3.5);
@@ -143,19 +144,4 @@ public class AutonomousComp extends OpMode {
         telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
         telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
     }
-
-//    public void laps(double moreDistance){
-//        sm.translate(90, safeSpeed, 67+moreDistance);
-//        //Travel to Foundation and Place SkyStone
-//        sm.pause(500);
-//        sm.translate(-90, safeSpeed, 90+moreDistance);
-//        //Travel back for second stone
-//        sm.pause(500);
-//        //Grab second SkyStone
-//        sm.translate(90, safeSpeed, 90+moreDistance);
-//        //Travel to Foundation & Place Second SkyStone
-//        sm.pause(500);
-//        sm.translate(-90, safeSpeed, 40);
-//        //Park under bridge, ^ no need to change, 40 is same for all
-//    }
 }

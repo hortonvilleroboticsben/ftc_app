@@ -7,56 +7,67 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp (name = "Collection Test", group = "TeleOp")
 public class CollectionTest extends OpMode {
 
-    Servo rotator, flapArm;
-    boolean closedFlap = false;
-    boolean closedFlapOS = true;
-
-    boolean closedRotator = false;
-    boolean closedRotatorOS = false;
-
-    double flapClosedPos = 0.175;
-    double flapOpenPos = 0.4; //.3 is open enough
+    Servo clampLeft,clampRight,rotator;
+    boolean clampLeftTog = false;
+    boolean clampLeftOS = false;
+    boolean clampRightTog = false;
+    boolean clampRightOS = false;
+    boolean rotatorTog = false;
+    boolean rotatorOS = false;
 
 
     @Override
     public void init() {
 
-        rotator = hardwareMap.servo.get("rotator");
-        flapArm = hardwareMap.servo.get("flapArm");
-        telemetry.addData("FLAP-ARM INIT POS",flapArm.getPosition());
-//        flapArm.setDirection(Servo.Direction.REVERSE);
-
+        rotator = hardwareMap.servo.get("srvRotator");
+        clampLeft = hardwareMap.servo.get("srvClampLeft");
+        clampRight = hardwareMap.servo.get("srvClampRight");
     }
 
     @Override
     public void loop() {
 
         //Flap Control - OS Toggle
-        if(gamepad1.a && closedFlapOS){
-            closedFlapOS = false;
-            closedFlap = !closedFlap;
-        } else if(!gamepad1.a) closedFlapOS = true;
+        if(gamepad1.a && !clampLeftOS){
+            clampLeftOS = true;
+            clampLeftTog = !clampLeftTog;
+        } else if(!gamepad1.a) clampLeftOS = false;
 
-        if(closedFlap){
-            flapArm.setPosition(flapClosedPos);
+        if(clampLeftTog){
+            clampLeft.setPosition(.5);
+            telemetry.addData("Left IDK",clampLeft.getPosition());
         } else {
-            flapArm.setPosition(flapOpenPos);
+            clampLeft.setPosition(.15);
+            telemetry.addData("Left otherIDK",clampLeft.getPosition());
         }
 
         //Rotator Control - OS Toggle
-        if(gamepad1.b && closedRotatorOS){
-            closedRotatorOS = false;
-            closedRotator = !closedRotator;
-            telemetry.addData("CLOSED ROTATOR", closedRotator);
-        } else if(!gamepad1.b) closedRotatorOS = true;
+        if(gamepad1.b && !clampRightOS){
+            clampRightOS = true;
+            clampRightTog = !clampRightTog;
+        } else if(!gamepad1.b) clampRightOS = false;
 
-        if(closedRotator){
-            rotator.setPosition(1);
-            telemetry.addData("ROTATE idk",rotator.getPosition());
+        if(clampRightTog){
+            clampRight.setPosition(.85);
+            telemetry.addData("Right idk",clampRight.getPosition());
         } else {
-            rotator.setPosition(0);
-            telemetry.addData("ROTATE otherIDK",rotator.getPosition());
+            clampRight.setPosition(.5);
+            telemetry.addData("Right otherIDK",clampRight.getPosition());
         }
+
+        if(gamepad1.y && !rotatorOS){
+            rotatorOS = true;
+            rotatorTog = !rotatorTog;
+        } else if (!gamepad1.y) rotatorOS = false;
+
+        if(rotatorTog){
+            rotator.setPosition(.9);
+            telemetry.addData("Rotator IDK",rotator.getPosition());
+        } else {
+            rotator.setPosition(.1);
+            telemetry.addData("Rotator otherIDK",rotator.getPosition());
+        }
+
 
     }
 }

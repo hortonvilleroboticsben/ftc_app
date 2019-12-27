@@ -12,18 +12,24 @@ import org.firstinspires.ftc.robotcore.internal.usb.exception.RobotUsbTimeoutExc
 @TeleOp(name = "Color & Distance Sensor Test", group ="test")
 public class ColorAndDistanceSensorTest extends OpMode {
 
-    Robot r = Robot.getInstance();
+    Robot r;
 
     @Override
     public void init() {
+        r = Robot.getInstance();
         r.initialize(this);
+        telemetry.addData("Null?",r.sensors.values());
     }
 
     @Override
     public void loop() {
 
-        telemetry.addData("RED", r.getColorValue("color","red"));
-        telemetry.addData("BLUE", r.getColorValue("color","blue"));
-        telemetry.addData("GREEN", r.getColorValue("color","green"));
+        telemetry.addData("RED Front", r.getColorValue("colorFront","red"));
+        telemetry.addData("BLUE", r.getColorValue("colorFront","blue"));
+        telemetry.addData("GREEN", r.getColorValue("colorFront","green"));
+
+        telemetry.addData("RED Back", r.getColorValue("colorBack","red"));
+        telemetry.addData("BLUE", r.getColorValue("colorBack","blue"));
+        telemetry.addData("GREEN", r.getColorValue("colorBack","green"));
     }
 }
