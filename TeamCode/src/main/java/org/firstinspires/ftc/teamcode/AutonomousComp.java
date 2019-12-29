@@ -1,8 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import android.os.Environment;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 @Autonomous (name = "Competition Autonomous", group = "Testing")
 public class AutonomousComp extends OpMode {
@@ -14,62 +25,60 @@ public class AutonomousComp extends OpMode {
     double safeSpeed = .55;
     long wait = 0;
     boolean waitOS, confirmOS = false;
+    boolean selOS = false;
     Timer t = new Timer();
+
+    JSONObject settings;
+    File rFolder;
+    ArrayList<String> fList = new ArrayList<>();
+    int fIndex = 0;
 
     @Override
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
+
+        rFolder = new File(Environment.getExternalStorageDirectory()+"/JSONConfigs/");
+        if(!rFolder.exists()) rFolder.mkdir();
+        for(File f : rFolder.listFiles()){
+            if(f.getName().substring(f.getName().length()-5).equals(".json")) fList.add(f.getName());
+        }
+
     }
 
     @Override
     public void init_loop(){
         sm.initializeMachine();
         //Replace these preview questions with a JSON file with the pre-sets
-        if(sm.next_state_to_execute()) {
-            telemetry.addData("Foundation Side", "A For Yes : B For No");
-            if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
-                foundationSide = gamepad1.a;
-                OSFound = true;
-            }
-            if (OSFound && !gamepad1.a && !gamepad1.b) {
-                OSFound = false;
-                sm.incrementState();
-            }
-        }
+        if(!confirmOS){
+            telemetry.addData("Please select a file", fList.get(fIndex));
 
-        if(sm.next_state_to_execute()) {
-            telemetry.addData("Alliance Color:", "A For Red : B For Blue");
-            if ((gamepad1.a ^ gamepad1.b) && !gamepad1.start) {
-                AllianceColor = gamepad1.a ? "Red" : "Blue";
-                OSColor = true;
+            if(gamepad1.dpad_down && !selOS) {
+                fIndex++;
+                selOS = true;
             }
-            if (OSColor && !gamepad1.a && !gamepad1.b) {
-                OSColor = false;
-                sm.incrementState();
+            if(gamepad1.dpad_up && !selOS) {
+                fIndex--;
+                selOS = true;
             }
-        }
+            if(!gamepad1.dpad_up && !gamepad1.dpad_down) selOS = false;
 
-        if(sm.next_state_to_execute()){
-            telemetry.addData("Pause?","Dpad Down: -1 Second, Dpad Up: +1 Second");
-            if(gamepad1.dpad_up && !waitOS){
-                waitOS = true;
-                wait+=1000;
-            } else if (gamepad1.dpad_down && !waitOS){
-                waitOS = true;
-                wait-=1000;
-            } else if (!gamepad1.dpad_up && !gamepad1.dpad_down){
-                waitOS = false;
-            } else if (gamepad1.a && !gamepad1.start && !confirmOS){
-                confirmOS = true;
-                sm.incrementState();
-            } else if (!gamepad1.a){
-                confirmOS = false;
+            fIndex = fIndex > fList.size()-1 ? fList.size()-1 : fIndex < 0 ? 0 : fIndex;
+
+            if(gamepad1.a && !gamepad1.start && !gamepad2.start) confirmOS = true;
+        } else {
+            File rPath = new File(rFolder, fList.get(fIndex));
+            try {
+                InputStream fin = new FileInputStream(rPath);
+                byte[] raw_inp = new byte[fin.available()];
+                String om = new String(raw_inp);
+                settings = new JSONObject(om);
+            } catch (Exception e) {
+                e.printStackTrace();
+                telemetry.addData("ERROR", e.getCause());
             }
+
         }
-        telemetry.addData("Foundation Side", foundationSide+"");
-        telemetry.addData("Alliance Color:", AllianceColor);
-        telemetry.addData("Pause Amount:",wait);
     }
 
     @Override
