@@ -110,7 +110,7 @@ class   Robot{
     public Map<String, DcMotor> motors;
     public Map<String, Object> servos;
     public Map<String, Object> sensors;
-    List<String> flags = new CopyOnWriteArrayList<>();
+    List<String> flags = new ArrayList<>();
     public OpMode opMode = null;
     public static String TAG = "ROBOTCLASS";
 
@@ -125,10 +125,10 @@ class   Robot{
     };
 
     String[][] senList = {
-            {"colorFront","0x1a"},
-            {"colorBack","0x3c"},
-            {"distF","0x4c"},
-            {"distS","0x5c"}
+            {"colorFront","1a"},
+            {"colorBack","3c"}/*,
+            {"distF","4c"},
+            {"distS","5c"}*/
     };
     String[][] srvList = {
             {"srvClampLeft","p"},
@@ -160,22 +160,31 @@ class   Robot{
                 if(holder != null) holder.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 motors.put(m[0], holder);
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
             for (String[] s : srvList) {
                 Object holder = null;
                 if (s[1].equals("p")) holder = op.hardwareMap.servo.get(s[0]);
                 else if (s[1].equals("c")) holder = op.hardwareMap.crservo.get(s[0]);
                 servos.put(s[0], holder);
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try{
             for(String[] sen : senList){
                     HardwareDevice sensor = op.hardwareMap.get(sen[0]);
+                    Log.d("ROBOT", "SENSOR TYPE:\t"+sensor.getClass());
                     sensor.resetDeviceConfigurationForOpMode();
                     if (sensor instanceof ColorSensor) {
-                        Log.e("ROBOT", "SENSOR IS RIGHT TYPE");
+                        Log.d("ROBOT", "SENSOR IS RIGHT TYPE");
                         sensor = op.hardwareMap.colorSensor.get(sen[0]);
-                        ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1])));
+                        ((ColorSensor) sensor).setI2cAddress(I2cAddr.create8bit(Integer.parseInt(sen[1],16)));
                         ((ColorSensor) sensor).enableLed(true);
-                    }
-                    sensors.put(sen[0], sensor);
+                        sensors.put(sen[0], (ColorSensor)sensor);
+                    } else sensors.put(sen[0], sensor);
             }
         }catch (Exception e){
             e.printStackTrace();

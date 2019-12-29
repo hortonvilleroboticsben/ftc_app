@@ -18,11 +18,13 @@ public class ColorAndDistanceSensorTest extends OpMode {
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
-        telemetry.addData("Null?",r.sensors.values());
     }
 
     @Override
     public void loop() {
+
+
+        telemetry.addData("type", r.sensors.get("colorFront").getClass());
 
         telemetry.addData("RED Front", r.getColorValue("colorFront","red"));
         telemetry.addData("BLUE", r.getColorValue("colorFront","blue"));
