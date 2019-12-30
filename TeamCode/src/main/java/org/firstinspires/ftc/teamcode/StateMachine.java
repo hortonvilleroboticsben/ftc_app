@@ -209,11 +209,12 @@ class StateMachine{
     public void skyStone(){
         if(next_state_to_execute()) {
             try {
-                Bitmap bitmap = rbt.takePicture();
+                rbt.takePicture();
                 ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
                 pos = imageAnalyzer.analyze(rbt.imageView);
-            } catch (CameraAccessException c){
-
+                incrementState();
+            } catch (Exception c){
+                Log.e("Picture Execpetion",c+"");
             }
         }
     }

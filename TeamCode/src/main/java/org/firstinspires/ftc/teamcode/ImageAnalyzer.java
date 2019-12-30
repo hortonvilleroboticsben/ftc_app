@@ -10,6 +10,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Rect;
 import android.media.Image;
 import android.os.Environment;
+import android.util.Log;
 import android.view.TextureView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,14 +58,18 @@ public class ImageAnalyzer {
 
 
     public int analyze(TextureView imageView) {
-
+        bitmap = null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
 
 
 
-        bitmap = imageView.getBitmap();
+        //bitmap = imageView.getBitmap();
+        if (bitmap == null){
+            Log.e("Picture Exption", "bitmap null");
 
+            return -1;
+        }
         Canvas canvas = new Canvas(bitmap);
 
 

@@ -39,7 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
               android:focusable="true"
               android:id="@+id/entire_screen"
-              android:orientation="vertical">
+              android:orientation="vertical" >
 
   <!-- black bar on top -->
   <RelativeLayout
@@ -147,7 +147,26 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_weight="1"
             />
 
-        </LinearLayout>
+        <TextureView
+            android:id="@+id/ftcImageView"
+            android:layout_width="match_parent"
+            android:layout_height="470dp" />
+
+        <TextView
+            android:id="@+id/textRemoteProgrammingMode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundLight"
+            android:gravity="center"
+            android:text=""
+            android:textColor="?attr/textWhite"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+
+
+      </LinearLayout>
 
       <!-- When visible, the error message will overlay and thus partially
            obscure part of the camera monitor. We make this trade off so as to
@@ -181,17 +200,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:text="" />
 
     <!-- invisible except when programming mode is activated from the DS -->
-    <TextView
-      android:id="@+id/textRemoteProgrammingMode"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="?attr/backgroundLight"
-      android:gravity="center"
-      android:textColor="?attr/textWhite"
-      android:textSize="40sp"
-      android:textStyle="bold"
-      android:visibility="invisible"
-      android:text="" />
+
 
   </RelativeLayout>
 

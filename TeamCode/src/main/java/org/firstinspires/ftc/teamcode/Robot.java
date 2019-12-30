@@ -41,6 +41,7 @@ import android.media.ImageReader;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -75,7 +76,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 
-
 class   Robot{
 
     private Robot(){
@@ -86,7 +86,7 @@ class   Robot{
 
     File filepath;
 
-    TextureView imageView;
+    TextureView imageView = new FtcRobotControllerActivity().imageView;
 
     TextView averages, heightTV, widthTV;
 
@@ -410,10 +410,11 @@ class   Robot{
         }
     };
 
-    public Bitmap takePicture() throws CameraAccessException {
+    public void takePicture() throws CameraAccessException {
+        finalImage = null;
         if (cameraDevice == null){
             Log.e(TAG, "cameraDevice is null");
-            return null;
+            //return null;
         }
 
         //CameraPreview cameraPreview = new CameraPreview()
@@ -525,7 +526,7 @@ class   Robot{
 
             }
         },  backgroundHandler);
-        return finalImage;
+        //return finalImage;
     }
 
     public void openCamera(CameraManager cameraManager) throws CameraAccessException, SecurityException{
@@ -612,6 +613,7 @@ class   Robot{
 
     private void startBackgroundThread(){
         handlerThread = new HandlerThread("Camera background");
+
         handlerThread.start();
 
         backgroundHandler = new Handler((handlerThread.getLooper()));
