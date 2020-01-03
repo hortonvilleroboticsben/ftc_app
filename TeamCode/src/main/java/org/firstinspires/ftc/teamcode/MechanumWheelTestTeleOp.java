@@ -60,7 +60,7 @@ public class MechanumWheelTestTeleOp extends OpMode {
             }
 
             if(Math.abs(gamepad2.left_stick_y) > .5) {
-                r.setServoPosition("srvClamp", gamepad2.left_stick_y);
+                r.setServoPosition("srvClampLeft", gamepad2.left_stick_y);
             }
         }
 

@@ -20,10 +20,8 @@ public class AutonomousComp extends OpMode {
 
     Robot r;
     StateMachine sm = new StateMachine();
-    String AllianceColor = "Blue";
-    boolean foundationSide, OSFound,OSColor = false;
+    boolean OSFound,OSColor = false;
     double safeSpeed = .55;
-    long wait = 0;
     boolean waitOS, confirmOS = false;
     boolean selOS = false;
     Timer t = new Timer();
@@ -32,6 +30,11 @@ public class AutonomousComp extends OpMode {
     File rFolder;
     ArrayList<String> fList = new ArrayList<>();
     int fIndex = 0;
+
+    String allianceColor, returnPath, apFoundationOrientation = "No Change";
+    boolean loadingSideStart, apMoveFoundation = false;
+    long wait = 0;
+    int skyStones = -1;
 
     @Override
     public void init() {
@@ -73,6 +76,13 @@ public class AutonomousComp extends OpMode {
                 byte[] raw_inp = new byte[fin.available()];
                 String om = new String(raw_inp);
                 settings = new JSONObject(om);
+                allianceColor = settings.getString("alliance");
+                loadingSideStart = settings.getBoolean("loadingSideStart");
+                wait = settings.getLong("pauseTime");
+                returnPath = settings.getString("returnPath");
+                skyStones = settings.getInt("skyStones");
+                apMoveFoundation = settings.getBoolean("apMoveFoundation");
+                apFoundationOrientation = settings.getString("apFoundationOrientation");
             } catch (Exception e) {
                 e.printStackTrace();
                 telemetry.addData("ERROR", e.getCause());
@@ -90,42 +100,61 @@ public class AutonomousComp extends OpMode {
     public void loop() {
         sm.initializeMachine();
         sm.pause(wait);
-            if (foundationSide) {
+            if (!loadingSideStart) {
                 sm.translate(0, safeSpeed, 5);
             } else {
-                if(AllianceColor.equals("Blue")) {
+                if(allianceColor.equals("blue")) {
                     sm.translate(0, safeSpeed, 36.75);
                     sm.translate(-90, safeSpeed, 3.6);
                     sm.rotate(-90, safeSpeed);
                     sm.translate(0, safeSpeed, 7);
                     //Insert Collection System
                     sm.translate(180, safeSpeed, 7);
-                    sm.translate(-90, safeSpeed, 20);
+                    if(returnPath.equals("not_wall")) {
+                        sm.translate(-90, safeSpeed, 20);
+                    } else {
+                        sm.translate(-90, safeSpeed, 40);
+                    }
                     sm.translate(180, 1.0, 76);
                     sm.rotate(90, safeSpeed);
-                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
+                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up the foundation at that distance
                     //Insert Foundation Servos
-                    sm.translate(180, safeSpeed, 23.1);
-                    //Pulled Foundation to Building Site ^
+                    sm.translate(180, safeSpeed, 23.1); //This pulls foundation into building site
 
-                    //Go back for Second SkyStone V------------
 
-                    //If our alliance is not parked against wall
-                    sm.translate(-94, .7, 117); //Add color sensor, to know when we're near the tape
-                    //When see tape, move x amount to the 3rd Skystone
+                    if(returnPath.equals("wall")) {
+                        sm.translate(-94,safeSpeed,60);
+                    } else {
+                        //When Alliance if on the wall
+                    }
+                    if(sm.next_state_to_execute()) {
+                        int frontBlue = r.getColorValue("colorFront", "blue");
+                        int backBlue = r.getColorValue("colorBack", "blue");
+                        if(frontBlue<11){
+                            //WheelSetL is static, might cause problem
+                            r.setPower(Robot.wheelSetL[0],.3);
+                            r.setPower(Robot.wheelSetL[1],.3);
+                        }
+                        if(backBlue<11){
+                            r.setPower(Robot.wheelSetL[0],-.3);
+                            r.setPower(Robot.wheelSetL[1],-.3);
+                        }
+                        if(frontBlue >= 11 && backBlue >= 11) sm.incrementState();
+                    }
+                    if(skyStones==2) {
+                        sm.translate(0, safeSpeed / 2, 23);
+                        sm.translate(90, safeSpeed / 2, 10);
+                        sm.translate(-90, safeSpeed / 2, 2);
 
-                    sm.translate(0, safeSpeed / 2, 23);
-                    sm.translate(90, safeSpeed / 2, 10);
-                    sm.translate(-90, safeSpeed / 2, 2);
-
-                    sm.translate(0, safeSpeed / 2, 10);
-                    sm.translate(-90, safeSpeed / 2, 3.5);
-                    sm.rotate(-90, safeSpeed / 2);
-                    sm.translate(0, safeSpeed / 2, 7);
-                    //Insert Collection System
-                    sm.translate(180, safeSpeed / 2, 7);
-                    sm.translate(-90, safeSpeed / 2, 20);
-                    sm.translate(180, safeSpeed / 2, 77);
+                        sm.translate(0, safeSpeed / 2, 10);
+                        sm.translate(-90, safeSpeed / 2, 3.5);
+                        sm.rotate(-90, safeSpeed / 2);
+                        sm.translate(0, safeSpeed / 2, 7);
+                        //Insert Collection System
+                        sm.translate(180, safeSpeed / 2, 7);
+                        sm.translate(-90, safeSpeed / 2, 20);
+                        sm.translate(180, safeSpeed / 2, 77);
+                    }
                 } else {
                     sm.translate(0, safeSpeed, 36.75);
                     sm.translate(90, safeSpeed, 3.6);

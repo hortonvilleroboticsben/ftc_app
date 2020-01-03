@@ -86,7 +86,7 @@ class   Robot{
 
     File filepath;
 
-    TextureView imageView = new FtcRobotControllerActivity().imageView;
+    TextureView imageView = FtcRobotControllerActivity.ftcApp.imageView;
 
     TextView averages, heightTV, widthTV;
 
@@ -656,14 +656,14 @@ class   Robot{
     }
 
     public Activity getActivity(){
-        FtcRobotControllerActivity ftcRobotControllerActivity = new FtcRobotControllerActivity();
+        FtcRobotControllerActivity ftcRobotControllerActivity = FtcRobotControllerActivity.ftcApp;
 
         final Activity activity = ftcRobotControllerActivity.getActivity();
         return activity;
     }
 
     public CameraManager getCameraManager(){
-        FtcRobotControllerActivity ftcRobotControllerActivity = new FtcRobotControllerActivity();
+        FtcRobotControllerActivity ftcRobotControllerActivity = FtcRobotControllerActivity.ftcApp;
         CameraManager manager = ftcRobotControllerActivity.getCameraManager();
         return manager;
     }
