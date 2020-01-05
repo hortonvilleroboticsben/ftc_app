@@ -125,8 +125,8 @@ class   Robot{
     };
 
     String[][] senList = {
-            {"colorFront","1a"},
-            {"colorBack","3c"}/*,
+            {"colorFront","3c"},
+            {"colorBack","1a"}/*,
             {"distF","4c"},
             {"distS","5c"}*/
     };

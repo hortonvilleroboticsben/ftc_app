@@ -23,9 +23,6 @@ public class ColorAndDistanceSensorTest extends OpMode {
     @Override
     public void loop() {
 
-
-        telemetry.addData("type", r.sensors.get("colorFront").getClass());
-
         telemetry.addData("RED Front", r.getColorValue("colorFront","red"));
         telemetry.addData("BLUE", r.getColorValue("colorFront","blue"));
         telemetry.addData("GREEN", r.getColorValue("colorFront","green"));

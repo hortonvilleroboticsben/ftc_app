@@ -41,8 +41,9 @@ public class AutonomousComp extends OpMode {
         r = Robot.getInstance();
         r.initialize(this);
 
-        rFolder = new File(Environment.getExternalStorageDirectory()+"/JSONConfigs/");
-        if(!rFolder.exists()) rFolder.mkdir();
+        rFolder = new File(Environment.getExternalStorageDirectory()+"/JSONConfigs");
+        if(!rFolder.exists())
+            rFolder.mkdir();
         for(File f : rFolder.listFiles()){
             if(f.getName().substring(f.getName().length()-5).equals(".json")) fList.add(f.getName());
         }
@@ -54,21 +55,25 @@ public class AutonomousComp extends OpMode {
         sm.initializeMachine();
         //Replace these preview questions with a JSON file with the pre-sets
         if(!confirmOS){
-            telemetry.addData("Please select a file", fList.get(fIndex));
+            if(fList.size() != 0) {
+                telemetry.addData("Please select a file", fList.get(fIndex));
 
-            if(gamepad1.dpad_down && !selOS) {
-                fIndex++;
-                selOS = true;
+                if (gamepad1.dpad_down && !selOS) {
+                    fIndex++;
+                    selOS = true;
+                }
+                if (gamepad1.dpad_up && !selOS) {
+                    fIndex--;
+                    selOS = true;
+                }
+                if (!gamepad1.dpad_up && !gamepad1.dpad_down) selOS = false;
+
+                fIndex = fIndex > fList.size() - 1 ? fList.size() - 1 : fIndex < 0 ? 0 : fIndex;
+
+                if (gamepad1.a && !gamepad1.start && !gamepad2.start) confirmOS = true;
+            }else{
+                telemetry.addData("ERROR",  "No files available.");
             }
-            if(gamepad1.dpad_up && !selOS) {
-                fIndex--;
-                selOS = true;
-            }
-            if(!gamepad1.dpad_up && !gamepad1.dpad_down) selOS = false;
-
-            fIndex = fIndex > fList.size()-1 ? fList.size()-1 : fIndex < 0 ? 0 : fIndex;
-
-            if(gamepad1.a && !gamepad1.start && !gamepad2.start) confirmOS = true;
         } else {
             File rPath = new File(rFolder, fList.get(fIndex));
             try {
@@ -101,15 +106,10 @@ public class AutonomousComp extends OpMode {
         sm.initializeMachine();
         sm.pause(wait);
             if (!loadingSideStart) {
-                sm.translate(0, safeSpeed, 5);
+
             } else {
                 if(allianceColor.equals("blue")) {
-                    sm.translate(0, safeSpeed, 36.75);
-                    sm.translate(-90, safeSpeed, 3.6);
-                    sm.rotate(-90, safeSpeed);
-                    sm.translate(0, safeSpeed, 7);
-                    //Insert Collection System
-                    sm.translate(180, safeSpeed, 7);
+
                     if(returnPath.equals("not_wall")) {
                         sm.translate(-90, safeSpeed, 20);
                     } else {
@@ -127,19 +127,29 @@ public class AutonomousComp extends OpMode {
                     } else {
                         //When Alliance if on the wall
                     }
+
                     if(sm.next_state_to_execute()) {
                         int frontBlue = r.getColorValue("colorFront", "blue");
                         int backBlue = r.getColorValue("colorBack", "blue");
                         if(frontBlue<11){
                             //WheelSetL is static, might cause problem
-                            r.setPower(Robot.wheelSetL[0],.3);
-                            r.setPower(Robot.wheelSetL[1],.3);
+                            r.setPower(Robot.wheelSet1[0],.2);
+                            r.setPower(Robot.wheelSet2[0],-.2);
+                        }else{
+                            r.setPower(Robot.wheelSet1[0],-.3);
+                            r.setPower(Robot.wheelSet2[0],.3);
                         }
                         if(backBlue<11){
-                            r.setPower(Robot.wheelSetL[0],-.3);
-                            r.setPower(Robot.wheelSetL[1],-.3);
+                            r.setPower(Robot.wheelSet1[1],.2);
+                            r.setPower(Robot.wheelSet2[1],-.2);
+                        }else{
+                            r.setPower(Robot.wheelSet1[1],-.3);
+                            r.setPower(Robot.wheelSet2[1],.3);
                         }
-                        if(frontBlue >= 11 && backBlue >= 11) sm.incrementState();
+                        if(frontBlue >= 11 && backBlue >= 11){
+                            r.setDrivePower(0,0);
+                            sm.incrementState();
+                        }
                     }
                     if(skyStones==2) {
                         sm.translate(0, safeSpeed / 2, 23);
@@ -181,5 +191,13 @@ public class AutonomousComp extends OpMode {
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
         telemetry.addData("mtrLeftBack", r.getEncoderCounts("mtrLeftBack"));
         telemetry.addData("mtrRightBack", r.getEncoderCounts("mtrRightBack"));
+
+        telemetry.addData("RED Front", r.getColorValue("colorFront","red"));
+        telemetry.addData("BLUE", r.getColorValue("colorFront","blue"));
+        telemetry.addData("GREEN", r.getColorValue("colorFront","green"));
+
+        telemetry.addData("RED Back", r.getColorValue("colorBack","red"));
+        telemetry.addData("BLUE", r.getColorValue("colorBack","blue"));
+        telemetry.addData("GREEN", r.getColorValue("colorBack","green"));
     }
 }

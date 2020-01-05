@@ -64,14 +64,27 @@ public class MechanumWheelTestTeleOp extends OpMode {
             }
         }
 
-        if(gamepad1.a && !gamepad1.start){
+        if(gamepad1.x && !gamepad1.start){
             auto = true;
             m.reset();
             r.resetDriveEncoders();
 
         }
 
-        m.translate(0,.5, 20);
+        if(m.next_state_to_execute()){
+            int frontBlue = r.getColorValue("colorFront", "blue");
+            int backBlue = r.getColorValue("colorBack", "blue");
+            if(frontBlue<11){
+                //WheelSetL is static, might cause problem
+                r.setPower(Robot.wheelSetL[0],.3);
+                r.setPower(Robot.wheelSetL[1],.3);
+            }
+            if(backBlue<11){
+                r.setPower(Robot.wheelSetL[0],-.3);
+                r.setPower(Robot.wheelSetL[1],-.3);
+            }
+            if(frontBlue >= 11 && backBlue >= 11) m.incrementState();
+        }
         if(m.next_state_to_execute() && auto){
             auto = false;
             m.incrementState();
