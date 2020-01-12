@@ -31,8 +31,12 @@ public class AutonomousComp extends OpMode {
     ArrayList<String> fList = new ArrayList<>();
     int fIndex = 0;
 
-    String allianceColor, returnPath, apFoundationOrientation = "No Change";
-    boolean loadingSideStart, apMoveFoundation = false;
+//    String allianceColor, returnPath, apFoundationOrientation = "No Change";
+    String allianceColor = "blue";
+    String returnPath = "wall";
+    String apFoundationOrientation = "|";
+    boolean loadingSideStart = true;
+    boolean apMoveFoundation = false;
     long wait = 0;
     int skyStones = -1;
 
@@ -79,6 +83,7 @@ public class AutonomousComp extends OpMode {
             try {
                 InputStream fin = new FileInputStream(rPath);
                 byte[] raw_inp = new byte[fin.available()];
+                fin.read(raw_inp);
                 String om = new String(raw_inp);
                 settings = new JSONObject(om);
                 allianceColor = settings.getString("alliance");
@@ -90,7 +95,7 @@ public class AutonomousComp extends OpMode {
                 apFoundationOrientation = settings.getString("apFoundationOrientation");
             } catch (Exception e) {
                 e.printStackTrace();
-                telemetry.addData("ERROR", e.getCause());
+                telemetry.addData("TRY CATCH ERROR", e.getCause());
             }
 
         }
@@ -100,30 +105,69 @@ public class AutonomousComp extends OpMode {
     public void start(){
         sm.reset();
     }
-
     @Override
     public void loop() {
         sm.initializeMachine();
         sm.pause(wait);
-            if (!loadingSideStart) {
-
-            } else {
+            if (loadingSideStart) {
                 if(allianceColor.equals("blue")) {
 
                     if(returnPath.equals("not_wall")) {
-                        sm.translate(-90, safeSpeed, 20);
-                    } else {
-                        sm.translate(-90, safeSpeed, 40);
-                    }
-                    sm.translate(180, 1.0, 76);
-                    sm.rotate(90, safeSpeed);
-                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up the foundation at that distance
-                    //Insert Foundation Servos
-                    sm.translate(180, safeSpeed, 23.1); //This pulls foundation into building site
+                        sm.translate(90, safeSpeed, 26);
+                        sm.rotate(-90, safeSpeed);
 
+//                        if(sm.next_state_to_execute()){
+                            sm.initRunToTarget("mtrLift", 3000, safeSpeed);
+                            r.setServoPosition("srvClampLeft", .1);
+                            r.setServoPosition("srvClampRight", .6);
+
+                            sm.translate(180, .2, 4);
+
+                            r.setServoPosition("srvClampRight", .1);
+                            sm.initRunToTarget("mtrLift", 0, safeSpeed);
+
+                            sm.translate(0, .2, 4);
+
+//                            sm.incrementState();
+//                        }
+                    } else { //returnPath.equals("wall");
+                        sm.translate(90, safeSpeed, 26); //travelling to skystone
+                        sm.rotate(-90, safeSpeed); // spin to line up collector to skystone
+
+                        if(sm.next_state_to_execute()){
+                            r.initRunToTarget("mtrLift", 3000, safeSpeed);
+                            if(r.hasMotorEncoderReached("mtrLift",3010)){
+                                r.initRunToTarget("mtrLift", 0, safeSpeed);
+                                if(r.hasMotorEncoderReached("mtrLift",0+200)){
+                                    r.setPower("mtrLift",0);
+                                }
+                            }
+                            r.setServoPosition("srvClampLeft", .1);
+                            r.setServoPosition("srvClampRight", .6);
+
+                            sm.translate(180, .2, 4);
+
+                            r.setServoPosition("srvClampRight", .1);
+
+                            
+                            sm.translate(0, .2, 4);
+
+                            sm.incrementState();
+                        }
+
+                        sm.translate(90, safeSpeed, 24); //travelling to wall
+                    }
+
+                    sm.translate(0, safeSpeed, 76);
+
+                    //TO Foundation and BACK
+                    sm.rotate(-90,safeSpeed);
+                    sm.translate(0, safeSpeed, 24);
+                    sm.pause(1000);
+                    sm.translate(180, safeSpeed, 30);
 
                     if(returnPath.equals("wall")) {
-                        sm.translate(-94,safeSpeed,60);
+                        sm.translate(-94,safeSpeed,40);
                     } else {
                         //When Alliance if on the wall
                     }
@@ -186,6 +230,8 @@ public class AutonomousComp extends OpMode {
                     sm.translate(90, .7, 111); //Add color sensor, to know when we're near the tape
                     //When see tape, move x amount to the 3rd Skystone
                 }
+            } else {
+
             }
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));

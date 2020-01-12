@@ -134,8 +134,7 @@ class   Robot{
             {"srvClampLeft","p"},
             {"srvClampRight","p"},
             {"srvRotator","p"},
-            {"srvFoundL","p"},
-            {"srvFoundR","p"}
+            {"srvFound","p"},
     };
     static String[] wheelSet1 = {"mtrFrontLeft", "mtrBackRight"};
     static String[] wheelSet2 = {"mtrFrontRight", "mtrBackLeft"};
