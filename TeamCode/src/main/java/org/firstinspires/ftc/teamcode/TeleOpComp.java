@@ -64,10 +64,10 @@ public class TeleOpComp extends OpMode {
                 double hyp = Math.sqrt(x * x + y * y);
                 boolean motorBand = Math.abs(x) > .05 || Math.abs(y)> .05;
                 double speedControl = gamepad1.right_bumper ? 1 : gamepad1.right_trigger > .5 ? .25 : .5;
-                r.setPower(r.wheelSet1[0], motorBand ?  -hyp * Math.cos(theta2) * speedControl : 0);
-                r.setPower(r.wheelSet2[0], motorBand ? hyp * Math.sin(theta2) * speedControl : 0);
-                r.setPower(r.wheelSet1[1], motorBand ?  -hyp * Math.cos(theta2) * speedControl : 0);
-                r.setPower(r.wheelSet2[1], motorBand ? hyp * Math.sin(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet1[0], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet2[0], motorBand ? -hyp * Math.sin(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet1[1], motorBand ?  hyp * Math.cos(theta2) * speedControl : 0);
+                r.setPower(r.wheelSet2[1], motorBand ? -hyp * Math.sin(theta2) * speedControl : 0);
 
             }else {
                 r.setPower(r.wheelSetL[0], gamepad1.right_stick_x);
