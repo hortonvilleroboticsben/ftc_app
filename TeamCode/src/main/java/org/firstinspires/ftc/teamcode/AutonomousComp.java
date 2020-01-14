@@ -20,6 +20,7 @@ public class AutonomousComp extends OpMode {
 
     Robot r;
     StateMachine sm = new StateMachine();
+    StateMachine vision = new StateMachine();
     boolean OSFound,OSColor = false;
     double safeSpeed = .55;
     boolean waitOS, confirmOS = false;
@@ -39,6 +40,8 @@ public class AutonomousComp extends OpMode {
     boolean apMoveFoundation = false;
     long wait = 0;
     int skyStones = -1;
+
+    int[] vsData = null;
 
     @Override
     public void init() {
@@ -108,7 +111,17 @@ public class AutonomousComp extends OpMode {
     @Override
     public void loop() {
         sm.initializeMachine();
+        vision.initializeMachine();
+
+        int[] temp = vision.getVisionData();
+        vsData = temp == null ? vsData : temp;
+
+        vision.SetFlag(sm, "Vision Done");
+
         sm.pause(wait);
+
+        sm.WaitForFlag("VisionDone");
+
             if (loadingSideStart) {
                 if(allianceColor.equals("blue")) {
 
