@@ -16,7 +16,8 @@ public class AutonomousVision extends OpMode {
     Robot r;
     StateMachine sm = new StateMachine();
     StateMachine vision = new StateMachine();
-    ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
+    FtcRobotControllerActivity ftcRobotControllerActivity = new FtcRobotControllerActivity();
+    ImageAnalyzer imageAnalyzer = new ImageAnalyzer(ftcRobotControllerActivity.imageView.getHeight(), ftcRobotControllerActivity.imageView.getWidth());
     int pos = 0;
 
     String skyCase = "left";
@@ -80,7 +81,7 @@ public class AutonomousVision extends OpMode {
         */
         vision.initializeMachine();
         //vision.pause(wait);
-        FtcRobotControllerActivity ftcRobotControllerActivity = new FtcRobotControllerActivity();
+
         if(vision.next_state_to_execute()){
 
             try {
@@ -94,7 +95,7 @@ public class AutonomousVision extends OpMode {
             vision.incrementState();
         }
         if(vision.next_state_to_execute()){
-            pos = imageAnalyzer.analyze(ftcRobotControllerActivity.imageView);
+            //pos = imageAnalyzer.analyze(ftcRobotControllerActivity.imageView);
             vision.incrementState();
 
         }
@@ -118,7 +119,7 @@ public class AutonomousVision extends OpMode {
 
                         Place and park under Bridge
             */
-            sm.skyStone();
+            //sm.skyStone();
 
             switch (sm.pos) {
                 case 2:

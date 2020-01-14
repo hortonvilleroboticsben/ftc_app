@@ -8,13 +8,19 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+
+import java.io.File;
+
 import static org.firstinspires.ftc.teamcode.Robot.wheelSet1;
 import static org.firstinspires.ftc.teamcode.Robot.wheelSet2;
 
 class StateMachine{
 
     public String flag = "";
-    Robot rbt= Robot.getInstance();
+    //Robot rbt= Robot.getInstance();
+
+    Robot rbt = Robot.getInstance();
     final String TAG = "StateMachine";
     final double wheelCircumference = 2.7222222222222222222222222222222 * Math.PI;
     final int countsPerRotation = 560;
@@ -209,14 +215,31 @@ class StateMachine{
     public void skyStone(){
         if(next_state_to_execute()) {
             try {
-                rbt.takePicture();
-                ImageAnalyzer imageAnalyzer = new ImageAnalyzer();
-                pos = imageAnalyzer.analyze(rbt.imageView);
+                /*rbt.takePicture();
+                ImageAnalyzer imageAnalyzer = new ImageAnalyzer(0, 0);
+                pos = imageAnalyzer.analyze(rbt.imageView);*/
                 incrementState();
             } catch (Exception c){
                 Log.e("Picture Execpetion",c+"");
             }
         }
+    }
+
+    public int[] getVisionData() {
+        if (next_state_to_execute()) {
+            int[] returnvalues = null;
+            try {
+                File filename = FtcRobotControllerActivity.ftcApp.takePicture();
+                returnvalues = new ImageAnalyzer(0, 0).analyze(filename);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            incrementState();
+            return returnvalues;
+        }
+        return null;
     }
 
 }

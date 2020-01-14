@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.Image;
 import android.os.Environment;
@@ -17,14 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //import boofcv.alg.enhance.EnhanceImageOps;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.jcodec.movtool.streaming.tracks.ToAACTrack;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import boofcv.alg.InputSanityCheck;
 import boofcv.alg.distort.DistortImageOps;
@@ -42,87 +48,60 @@ import boofcv.android.ConvertBitmap;
 //import boofcv.io.image.ConvertBufferedImage;
 //import boofcv.struct.image.GrayF32;
 import boofcv.concurrency.BoofConcurrency;
+import boofcv.io.image.UtilImageIO;
 import boofcv.struct.border.BorderType;
 import boofcv.struct.image.GrayU8;
 //import boofcv.struct.image.ImageType;
 import boofcv.struct.image.Planar;
 
 
-public class ImageAnalyzer {
-    public static final int height = 669 ;
-    public static final int width = 473;
-    public static final int threshold = 180;
+public class ImageAnalyzer extends OpMode {
+    public static  int height = 200;
+    public static  int width = 200;
+    public static  int threshold = 0;
 
     public Bitmap bitmap;
 
+    public ImageAnalyzer(int a, int b){}
+    @Override
+    public void init() {
+    }
+    @Override
+    public void loop() {
 
+    }
 
-    public int analyze(TextureView imageView) {
-        bitmap = null;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;
-
-
-
-        //bitmap = imageView.getBitmap();
-        if (bitmap == null){
-            Log.e("Picture Exption", "bitmap null");
-
-            return -1;
+    public int[] analyze(File filename) {
+        telemetry.addData("ImageAnalyzer: ", "true");
+        while(!filename.exists() || !filename.canWrite());
+        String filenameString = filename.getPath();
+        Bitmap image = null;
+        try {
+            while(image == null) {
+                image = BitmapFactory.decodeFile(filenameString);
+                TimeUnit.MILLISECONDS.sleep(10);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        Canvas canvas = new Canvas(bitmap);
+        image = BitmapFactory.decodeFile(filenameString);//filename.getAbsolutePath()
+        Log.v("IMAGE", ""+(image==null)+":"+filename);
+        float degrees = 270;//rotation degree
+        Matrix matrix = new Matrix();
+        matrix.setRotate(degrees,image.getWidth()/2,image.getHeight()/2);
+        Bitmap nimage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
 
+        width = nimage.getWidth();//432
+        height = nimage.getHeight();//332
 
-/*//load source bitmap and prepare destination bitmap
-        Bitmap pic = BitmapFactory.decodeResource(getResources(), R.drawable., options);
-        Bitmap result = Bitmap.createBitmap(pic.getWidth(), pic.getHeight(),  Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(result);
-
-//first convert bitmap to grey scale:
-        bitmapPaint.setColorFilter(new ColorMatrixColorFilter(createGreyMatrix()));
-        c.drawBitmap(pic, 0, 0, bitmapPaint);
-
-//then convert the resulting bitmap to black and white using threshold matrix
-        bitmapPaint.setColorFilter(new ColorMatrixColorFilter(createThresholdMatrix(128)));
-        c.drawBitmap(result, 0, 0, bitmapPaint);
-        bitmapPaint.setColorFilter(null);
-        otherCanvas.drawBitmap(result, null, new Rect(x, y, x + size, y + size), bitmapPaint);*/
-
-
-        //Toast.makeText(c, "Receive Bitmap", Toast.LENGTH_LONG).show();
-        /*if (bytes!=null){
-            Toast.makeText(c, "Bytes has a value", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(c, "Bytes is equal to null", Toast.LENGTH_LONG).show();
-        }*/
-
-        //convert bytes to bitmap then i guess
-        //ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        // BufferedImage bImage2 = ImageIO.read(bis);
-        //Bitmap image = ImageIO.read(new File(fp ));
-
-        //File storage = Environment.getExternalStorageDirectory();
-        //File file = new File(storage, filepath)
-
-        //Bitmap image = BitmapFactory.decodeFile;
-        //Main norm = new Main();
-        //BufferedImage b =  normalizeImgC(image);
-
-        //bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-        //Toast.makeText(c, "Width: " + bitmap.getWidth() + "\nHeight: " + bitmap.getHeight(), Toast.LENGTH_LONG).show();
-
-
-
-
-        Bitmap croppedImg = cropImg(bitmap);
+        Bitmap croppedImg = cropImg(nimage);
 
         //saveImg(croppedImg, new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
 //        saveImg(blurImg(croppedImg), new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
 
 
         //return -1;
-        return blurImg(bitmap);
+        return blurImg(croppedImg);
     }
     /*public static void saveImg(BufferedImage image, File filePath){
         try {
@@ -134,25 +113,31 @@ public class ImageAnalyzer {
     }*/
     public static Bitmap cropImg(Bitmap image){
         Bitmap croppedImg = image;
-        //Bitmap croppedImg = image.getSubimage(1000, 1350, width, height);
+        //Bitmap bmp=BitmapFactory.decodeResource(getResources(), R.drawable.xyz);
+
+        //Bitmap croppedImg =Bitmap.createBitmap(image, 20,100,width, height);
+        save(croppedImg);
         //saveImg(croppedImg, new File("C:\\Users\\Sam\\Pictures\\testImgCrop.jpg"));
         //save(croppedImg, context);
         return croppedImg;
     }
 
-    public static int blurImg(Bitmap bitmap){
+    public static int[] blurImg(Bitmap bitmap){
 
-        int x = 50;
-        int y = 80;
+        int x = 0;
+        int y = 0;
 
 
-        Planar<GrayU8> layers = ConvertBitmap.bitmapToPlanar(bitmap, null, GrayU8.class, null);
-        //DistortImageOps.rotate(layers, layers, BorderType.ZERO, InterpolationType.POLYNOMIAL4, 270);
+        //Planar<GrayU8> layers = ConvertBitmap.bitmapToPlanar(bitmap, null, GrayU8.class, null);
+//        DistortImageOps.rotate(layers, layers, BorderType.ZERO, InterpolationType.POLYNOMIAL4, 270);
         //for (int i = 0; i<layers.getNumBands();i++) ImageMiscOps.rotateCW(layers.getBand(i), layers.getBand(i));
-        ConvertBitmap.planarToBitmap(layers, bitmap, null);
+        //ConvertBitmap.planarToBitmap(layers, bitmap, null);
+        bitmap = Bitmap.createBitmap(bitmap,x,y,width, (height/3));
+        width = bitmap.getWidth();
+        height = bitmap.getHeight();
         //Planar<GrayU8> layers = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);
-        GrayU8 blueLayer = layers.getBand(2);
-        GrayU8 redLayer = layers.getBand(0);
+          //GrayU8 blueLayer = layers.getBand(2);
+//        GrayU8 redLayer = layers.getBand(0);
 
         //System.out.println("Width: " + blueLayer.getWidth() + " Height: " + blueLayer.getHeight());
 
@@ -177,10 +162,10 @@ public class ImageAnalyzer {
         //System.out.println("Width: " + blueLayer.getWidth() + " Height: " + blueLayer.getHeight());
 
 
-        GrayU8  blueThresh = new GrayU8(width, height),
-                redThresh = new GrayU8(width, height),
-                dilated = new GrayU8(width , height),
-                eroded = new GrayU8(width, height);
+       //GrayU8  blueThresh = new GrayU8(width, height);
+//                redThresh = new GrayU8(width, height),
+//                dilated = new GrayU8(width , height),
+//                eroded = new GrayU8(width, height);
         //System.out.println(blueSubImage.getWidth() + " "+ blueSubImage.getHeight());
 
         /*
@@ -189,74 +174,83 @@ public class ImageAnalyzer {
          *
          * */
         //int threshold = 140;
-        //blueThresh = ThresholdImageOps.threshold(blueLayer, blueThresh, threshold, true);
-        //redThresh = ThresholdImageOps.threshold(redLayer, redThresh, threshold, false);
+//        blueThresh = ThresholdImageOps.threshold(blueLayer, blueThresh, threshold, true);
+//        redThresh = ThresholdImageOps.threshold(redLayer, redThresh, threshold, false);
 
         //blueThresh = threshold(blueLayer);
         //redThresh = threshold(redLayer);
 
         //GrayU8 overall = new GrayU8(width, height);
+        save(bitmap);
         int xAverages = 0;
         int count = 0;
-        for (int p = 0; p < width; p++) {
-            for (int e = 0; e < height; e++) {
+        for (int p = 0; p < width; p+=1) {
+            for (int e = 0; e < height; e+=1) {
                 //textView.setText("asdlfjalsdjfk;asdfjasdlkfj");
 
 
                 // get pixel color
                 int pixel = bitmap.getPixel(p, e);
-                int A = Color.alpha(pixel);
+                //int A = Color.alpha(pixel);
                 int R = Color.red(pixel);
                 int G = Color.green(pixel);
                 int B = Color.blue(pixel);
-                int gray = (int) (0.2989 * R + 0.5870 * G + 0.1140 * B);
-                int average = A+R+B;
+                int gray = (int) (4 * R + 0 * G + -8 * B);//(R,G,B)->(0.2989,0.5870,0.1140)
+                int average = G+R+B;
                 // use 128 as threshold, above -> white, below -> black
-                if (gray > threshold) {
+                if (R > 140 && B < 140) {
                     count++;
                     xAverages += p;
                     gray = 255;
                 }else
                     gray = 0;
                 // set new pixel color to output bitmap
-                bitmap.setPixel(p, e, Color.argb(A, gray, gray, gray));
+                bitmap.setPixel(p, e, Color.argb(255, gray, gray, gray));
             }
         }
 
 
-
+        save(bitmap);
+        if(count == 0) return new int[]{-1, count};
         xAverages = xAverages / count;
 
 
         //textView.setText(xAverages+"");
 
+        int pos = 666;
 
-        save(bitmap);
-        if(xAverages >= 0 && xAverages < 735) {
+        if(xAverages >= 0 && xAverages < 4*width/9) {
             //Toast.makeText(context, "2", Toast.LENGTH_LONG).show();
-            return 2;
+            pos =  2;
         }
-        if(xAverages >= 735 && xAverages < 1122) {
+        if(xAverages >= 4*width/9 && xAverages < 5*width/9) {
             //Toast.makeText(context, "3", Toast.LENGTH_LONG).show();
-            return 3;
+            pos =  3;
         }
-        if(xAverages >= 1123 && xAverages <= width){
+        if(xAverages >= 5*width/9 && xAverages <= width){
             //Toast.makeText(context, "1", Toast.LENGTH_LONG).show();
-            return 1;
+            pos =  1;
         }
-        return -1;
+        int[] returned = {pos, xAverages};
+        return returned;
     }
-    public static void save(Bitmap bitmap){
-        OutputStream outputStream = null;
-        //Bitmap b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    public static Bitmap save(Bitmap bitmap){
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(getOutputMediaFile());
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        try (OutputStream out = new FileOutputStream(getOutputMediaFile())){
+        /*try (OutputStream out = new FileOutputStream(getOutputMediaFile())){
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
 
         } catch (Exception e){
-            //Toast.makeText(context, e+"", Toast.LENGTH_LONG).show();
-        }
-
+            //Toast.makeText(FtcRobotControllerActivity.this, e+"", Toast.LENGTH_LONG).show();
+        }*/
+        return bitmap;
     }
     private static File getOutputMediaFile(){
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(

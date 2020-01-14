@@ -86,6 +86,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
@@ -340,12 +341,15 @@ public class FtcRobotControllerActivity extends Activity {
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         View view = findViewById(R.id.entire_screen);
         ftcApp = FtcRobotControllerActivity.this;
-        Canvas c = new Canvas();
-        Paint p = new Paint();
-        p.setColor(Color.BLACK);
-        p.setTextSize(20f);
-        c.drawText("Hello, World!", 0f, 0f, p);
-        imageView.draw(c);
+        //ImageView lines = (ImageView)findViewById(R.id.lines);
+        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.RGB_565);
+        Canvas c = new Canvas(bitmap);
+
+        MyView myView = new MyView(this);
+
+        myView.draw(c);
+
+
 
         final CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
@@ -1015,7 +1019,7 @@ public class FtcRobotControllerActivity extends Activity {
         }
     };
 
-    public Bitmap takePicture() throws CameraAccessException{
+    public File takePicture() throws CameraAccessException{
         if (cameraDevice == null){
             Log.e("Camera Device", "Null");
             return null;
@@ -1075,7 +1079,7 @@ public class FtcRobotControllerActivity extends Activity {
                 bytes = new byte[buffer.capacity()];
 
                 try {
-                    save(bytes);
+                    finalImage = save(bytes);
                     //b.compress(Bitmap.CompressFormat.JPEG, 100, null);
                     //finalImage = null;
                     //Toast.makeText(FtcRobotControllerActivity.this, pos+"", Toast.LENGTH_LONG).show();
@@ -1126,7 +1130,8 @@ public class FtcRobotControllerActivity extends Activity {
 
             }
         },  backgroundHandler);
-        return finalImage;
+        //save();
+        return filepath;
     }
     //check imageAnasdlfi because i think it's saving in there
     //idk if this save meathod even works
@@ -1134,8 +1139,14 @@ public class FtcRobotControllerActivity extends Activity {
         OutputStream outputStream = null;
         //Bitmap b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         Bitmap b = imageView.getBitmap();
-        try (OutputStream out = new FileOutputStream(filepath)){
+        finalImage = b;
+
+
+        try {
+            OutputStream out = new FileOutputStream(filepath);
             b.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
 
         } catch (Exception e){
             Toast.makeText(FtcRobotControllerActivity.this, e+"", Toast.LENGTH_LONG).show();
@@ -1276,6 +1287,31 @@ public class FtcRobotControllerActivity extends Activity {
                 "IMG_"+ timeStamp + ".jpg");
     }
 
+    public class MyView extends View
+    {
+        Paint paint = null;
+        public MyView(Context context)
+        {
+            super(context);
+            paint = new Paint();
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas)
+        {
+            super.onDraw(canvas);
+            int x = getWidth();
+            int y = getHeight();
+            int radius;
+            radius = 100;
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(Color.WHITE);
+            canvas.drawPaint(paint);
+            // Use Color.parseColor to define HTML colors
+            paint.setColor(Color.parseColor("#CD5C5C"));
+            canvas.drawCircle(x / 2, y / 2, radius, paint);
+        }
+    }
 
 }
 
