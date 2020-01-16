@@ -64,10 +64,12 @@ public class VisionTest extends OpMode {
         telemetry.addData("Total count", count);
         if (gamepad1.a && !gamepad1.start && picOS) {
             try {
-                FtcRobotControllerActivity.ftcApp.takePicture();
+                filename = FtcRobotControllerActivity.ftcApp.takePicture();
+                imageAnalyzer.analyze(filename);
             } catch (CameraAccessException e) {
                 e.printStackTrace();
             }
+
             picOS = false;
         }
         if (b != null) {
@@ -75,31 +77,6 @@ public class VisionTest extends OpMode {
         }
         if (!gamepad1.a) picOS = true;
 
- /*       if(out != null){
-            try {
-                FileOutputStream fout = new FileOutputStream(f,true);
-                fout.write((out[0]+","+out[1]+"\r\n").getBytes());
-                fout.flush();
-                fout.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            out = null;
-        }
-
-        if(filename != null){
-            out = imageAnalyzer.analyze(null,filename);
-            filename = null;
-        }
-
-        if(t.hasTimeElapsed(3000)){
-            t.reset();
-            try {
-                filename = FtcRobotControllerActivity.ftcApp.takePicture();
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
-        }*/
     }
 }
 

@@ -31,7 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -40,17 +39,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Paint;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -74,7 +70,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
 import android.view.Menu;
@@ -84,9 +79,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
@@ -129,12 +122,10 @@ import com.qualcomm.robotcore.util.WebServer;
 import com.qualcomm.robotcore.wifi.NetworkConnection;
 import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
-import com.sun.tools.javac.comp.Todo;
 
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
-import org.firstinspires.ftc.onbotjava.OnBotJavaClassLoader;
 import org.firstinspires.ftc.onbotjava.OnBotJavaHelperImpl;
 import org.firstinspires.ftc.onbotjava.OnBotJavaProgrammingMode;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
@@ -340,16 +331,14 @@ public class FtcRobotControllerActivity extends Activity {
         imageView = (TextureView) findViewById(R.id.ftcImageView);
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         View view = findViewById(R.id.entire_screen);
+        LinearLayout view2 = findViewById(R.id.surface);
+
+        view2.addView(new Doodler(getActivity()));
+
         ftcApp = FtcRobotControllerActivity.this;
         //ImageView lines = (ImageView)findViewById(R.id.lines);
         Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.RGB_565);
         Canvas c = new Canvas(bitmap);
-
-        MyView myView = new MyView(this);
-
-        myView.draw(c);
-
-
 
         final CameraManager cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {

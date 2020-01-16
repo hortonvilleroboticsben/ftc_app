@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-public class DrawingView extends View {
+public class Doodler extends View {
 
-    public DrawingView(Context c){
+    public Doodler(Context c){
         super(c);
     }
 
@@ -17,7 +17,7 @@ public class DrawingView extends View {
         Paint p = new Paint();
         p.setStrokeWidth(5);
         p.setColor(Color.RED);
-        canvas.drawCircle(0,0,10, p);
+        canvas.drawRect(20,20,20,20,p);
         super.onDraw(canvas);
     }
 }

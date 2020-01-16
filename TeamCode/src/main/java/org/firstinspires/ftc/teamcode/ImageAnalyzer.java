@@ -86,7 +86,7 @@ public class ImageAnalyzer extends OpMode {
         }
         image = BitmapFactory.decodeFile(filenameString);//filename.getAbsolutePath()
         Log.v("IMAGE", ""+(image==null)+":"+filename);
-        float degrees = 270;//rotation degree
+        float degrees = 90;//rotation degree
         Matrix matrix = new Matrix();
         matrix.setRotate(degrees,image.getWidth()/2,image.getHeight()/2);
         Bitmap nimage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
@@ -132,7 +132,7 @@ public class ImageAnalyzer extends OpMode {
 //        DistortImageOps.rotate(layers, layers, BorderType.ZERO, InterpolationType.POLYNOMIAL4, 270);
         //for (int i = 0; i<layers.getNumBands();i++) ImageMiscOps.rotateCW(layers.getBand(i), layers.getBand(i));
         //ConvertBitmap.planarToBitmap(layers, bitmap, null);
-        bitmap = Bitmap.createBitmap(bitmap,x,y,width, (height/3));
+        bitmap = Bitmap.createBitmap(bitmap,width/4, 2*height/3,width/2,height/6);
         width = bitmap.getWidth();
         height = bitmap.getHeight();
         //Planar<GrayU8> layers = ConvertBufferedImage.convertFromPlanar(bufferedImage, null, true, GrayU8.class);

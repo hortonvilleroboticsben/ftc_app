@@ -231,12 +231,12 @@ class StateMachine{
             try {
                 File filename = FtcRobotControllerActivity.ftcApp.takePicture();
                 returnvalues = new ImageAnalyzer(0, 0).analyze(filename);
-
+                incrementState();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            incrementState();
+
             return returnvalues;
         }
         return null;

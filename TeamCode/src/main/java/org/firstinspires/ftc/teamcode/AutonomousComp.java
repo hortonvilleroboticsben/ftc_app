@@ -130,7 +130,7 @@ public class AutonomousComp extends OpMode {
                         sm.rotate(-90, safeSpeed);
 
 //                        if(sm.next_state_to_execute()){
-                            sm.initRunToTarget("mtrLift", 3000, safeSpeed);
+                            /*sm.initRunToTarget("mtrLift", 3000, safeSpeed);
                             r.setServoPosition("srvClampLeft", .1);
                             r.setServoPosition("srvClampRight", .6);
 
@@ -139,7 +139,7 @@ public class AutonomousComp extends OpMode {
                             r.setServoPosition("srvClampRight", .1);
                             sm.initRunToTarget("mtrLift", 0, safeSpeed);
 
-                            sm.translate(0, .2, 4);
+                            sm.translate(0, .2, 4);*/
 
 //                            sm.incrementState();
 //                        }
