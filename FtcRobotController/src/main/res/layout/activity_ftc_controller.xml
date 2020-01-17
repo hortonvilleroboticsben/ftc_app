@@ -147,6 +147,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_weight="1"
             />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/surface"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:orientation="vertical" />
 
         <TextureView
             android:id="@+id/ftcImageView"
@@ -154,6 +163,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_height="500dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"/>
+        </RelativeLayout>
 
 
         <TextView
@@ -176,19 +186,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
            allow for a bigger camera monitor view in the common case when the
            error is not in fact present
         -->
-        <TextView style="@style/FtcTextViewStyleBold"
+
+
+      <TextView style="@style/FtcTextViewStyleBold"
             android:id="@+id/textErrorMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
             android:visibility="invisible"
             android:textColor="?attr/textMediumDark" />
-
-      <LinearLayout
-          android:id="@+id/surface"
-          android:layout_width="match_parent"
-          android:layout_height="500dp"
-          android:orientation="vertical" />
 
     </FrameLayout>
 

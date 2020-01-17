@@ -20,11 +20,12 @@ public class TeleOpComp extends OpMode {
     @Override
     public void init() {
 
-        srvClampLeft = hardwareMap.servo.get("srvClampLeft");
-        srvClampRight = hardwareMap.servo.get("srvClampRight");
-        srvRotator = hardwareMap.servo.get("srvRotator");
-        srvFound = hardwareMap.servo.get("srvFound");
-
+        try {
+            srvClampLeft = hardwareMap.servo.get("srvClampLeft");
+            srvClampRight = hardwareMap.servo.get("srvClampRight");
+            srvRotator = hardwareMap.servo.get("srvRotator");
+            srvFound = hardwareMap.servo.get("srvFound");
+        }catch (Exception e){}
         m.state_in_progress = 99;
         r = Robot.getInstance();
         r.initialize(this);
@@ -106,8 +107,9 @@ public class TeleOpComp extends OpMode {
             }
 
             //up/down controls
+            telemetry.addData("G2 RIGHT Y",gamepad2.right_stick_y);
             if(Math.abs(gamepad2.right_stick_y) > 0.05){
-                r.setPower("mtrLift",gamepad2.right_stick_y*0.6);
+                r.setPower("mtrLift",gamepad2.right_stick_y);
             } else {
                 r.setPower("mtrLift",0);
             }
