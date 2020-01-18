@@ -60,7 +60,7 @@ public class AutonomousComp extends OpMode {
     @Override
     public void init_loop(){
         sm.initializeMachine();
-        //Replace these preview questions with a JSON file with the pre-sets
+        //Replac e these preview questions with a JSON file with the pre-sets
         if(!confirmOS){
             if(fList.size() != 0) {
                 telemetry.addData("Please select a file", fList.get(fIndex));

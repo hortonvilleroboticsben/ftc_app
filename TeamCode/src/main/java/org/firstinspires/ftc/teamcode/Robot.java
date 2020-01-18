@@ -119,8 +119,6 @@ class   Robot{
             {"mtrBackRight","R"},   //Wheel Set 1
             {"mtrBackLeft","F"},    //Wheel Set 2
             {"mtrFrontRight","R"},  //Wheel Set 2
-            {"mtrCollectionLeft","F"},
-            {"mtrCollectionRight","R"},
             {"mtrLift","F"}
     };
 

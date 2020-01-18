@@ -122,9 +122,9 @@ public class TeleOpComp extends OpMode {
             } else if(!gamepad2.a && !gamepad1.start && !gamepad2.start) OSClampLeft = false;
 
             if(openClampLeft){
-                r.setServoPosition("srvClampLeft",.6);
+                r.setServoPosition("srvClampLeft",.9);
             } else {
-                r.setServoPosition("srvClampLeft",.2);
+                r.setServoPosition("srvClampLeft",.18);
             }
 
 
@@ -134,9 +134,9 @@ public class TeleOpComp extends OpMode {
             } else if (!gamepad2.b && !gamepad1.start && !gamepad2.start) OSClampRight = false;
 
             if(openClampRight){
-                r.setServoPosition("srvClampRight", .3);
+                r.setServoPosition("srvClampRight", .6);
             } else{
-                r.setServoPosition("srvClampRight", .1);
+                r.setServoPosition("srvClampRight", .19);
             }
 
             //Foundation Clip.......................................................................
@@ -159,7 +159,7 @@ public class TeleOpComp extends OpMode {
             } else if(!gamepad2.x) OSRotator = false;
 
             if(openRotator){
-                r.setServoPosition("srvRotator", .9);
+                r.setServoPosition("srvRotator", .28);
             } else {
                 r.setServoPosition("srvRotator", .1);
             }
