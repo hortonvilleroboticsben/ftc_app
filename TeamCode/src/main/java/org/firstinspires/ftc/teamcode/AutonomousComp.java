@@ -113,8 +113,8 @@ public class AutonomousComp extends OpMode {
         sm.initializeMachine();
 //        vision.initializeMachine();
 //
-//        int[] temp = vision.getVisionData();
-//        vsData = temp == null ? vsData : temp;
+        int[] temp = vision.getVisionData();
+        vsData = temp == null ? vsData : temp;
         final int placement = 1;
 
 //        vision.SetFlag(sm, "Vision Done");
