@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 
 @TeleOp(name = "TeleOpComp", group ="Comp")
 public class TeleOpComp extends OpMode {
@@ -15,7 +13,7 @@ public class TeleOpComp extends OpMode {
     public boolean auto = false;
     StateMachine m = new StateMachine();
     double theta1 = 0;
-    boolean OSClampLeft, OSClampRight, openClampRight, openClampLeft, OSRotator, openRotator, OSFound, downFound = false;
+    boolean OSClamp, OSClampRight, openClampRight, openClamp, OSRotator, openRotator, OSFound, downFound = false;
 
     @Override
     public void init() {
@@ -116,26 +114,16 @@ public class TeleOpComp extends OpMode {
 
 //          *************************************Toggles********************************************
 
-            if(gamepad2.a && !gamepad2.start && !gamepad1.start && !OSClampLeft){
-                OSClampLeft = true;
-                openClampLeft = !openClampLeft;
-            } else if(!gamepad2.a && !gamepad1.start && !gamepad2.start) OSClampLeft = false;
+            if(gamepad2.a && !gamepad2.start && !gamepad1.start && !OSClamp){
+                OSClamp = true;
+                openClamp = !openClamp;
+            } else if(!gamepad2.a && !gamepad1.start && !gamepad2.start) OSClamp = false;
 
-            if(openClampLeft){
-                r.setServoPosition("srvClampLeft",.9);
-            } else {
+            if(openClamp){
                 r.setServoPosition("srvClampLeft",.18);
-            }
-
-
-            if(gamepad2.b && !gamepad1.start && !gamepad2.start && !OSClampRight){
-                OSClampRight = true;
-                openClampRight = !openClampRight;
-            } else if (!gamepad2.b && !gamepad1.start && !gamepad2.start) OSClampRight = false;
-
-            if(openClampRight){
-                r.setServoPosition("srvClampRight", .6);
-            } else{
+                r.setServoPosition("srvClampRight", .4);
+            } else {
+                r.setServoPosition("srvClampLeft",.3);
                 r.setServoPosition("srvClampRight", .19);
             }
 
@@ -146,7 +134,7 @@ public class TeleOpComp extends OpMode {
             } else if (!gamepad2.y) OSFound = false;
 
             if(downFound){
-                r.setServoPosition("srvFound",.9);
+                r.setServoPosition("srvFound",.7);
             } else {
                 r.setServoPosition("srvFound",.2);
             }
@@ -159,7 +147,7 @@ public class TeleOpComp extends OpMode {
             } else if(!gamepad2.x) OSRotator = false;
 
             if(openRotator){
-                r.setServoPosition("srvRotator", .28);
+                r.setServoPosition("srvRotator", .85);
             } else {
                 r.setServoPosition("srvRotator", .1);
             }

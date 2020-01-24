@@ -111,23 +111,51 @@ public class AutonomousComp extends OpMode {
     @Override
     public void loop() {
         sm.initializeMachine();
-        vision.initializeMachine();
+//        vision.initializeMachine();
+//
+//        int[] temp = vision.getVisionData();
+//        vsData = temp == null ? vsData : temp;
+        final int placement = 1;
 
-        int[] temp = vision.getVisionData();
-        vsData = temp == null ? vsData : temp;
+//        vision.SetFlag(sm, "Vision Done");
 
-        vision.SetFlag(sm, "Vision Done");
 
         sm.pause(wait);
 
-        sm.WaitForFlag("VisionDone");
+//        sm.WaitForFlag("VisionDone");
 
             if (loadingSideStart) {
                 if(allianceColor.equals("blue")) {
 
+                    sm.translate(90, safeSpeed, 26);
+                    sm.rotate(-90, safeSpeed);
+
                     if(returnPath.equals("not_wall")) {
-                        sm.translate(90, safeSpeed, 26);
-                        sm.rotate(-90, safeSpeed);
+
+                        switch (placement){
+
+                            case 1:
+
+                                sm.translate(180, safeSpeed, 7);
+
+                                // INSERT SERVO STUFF
+
+                                sm.translate(180, safeSpeed, 20.75);
+                                sm.translate(0, safeSpeed, 12);
+
+                                sm.translate(-90, safeSpeed, 69);
+
+                                sm.translate(180, safeSpeed, 14);
+                                sm.translate(0, safeSpeed, 5);
+
+                            case 2:
+
+                            case 3:
+
+
+                        }
+
+
 
 //                        if(sm.next_state_to_execute()){
                             /*sm.initRunToTarget("mtrLift", 3000, safeSpeed);
@@ -144,9 +172,27 @@ public class AutonomousComp extends OpMode {
 //                            sm.incrementState();
 //                        }
                     } else { //returnPath.equals("wall");
-                        sm.translate(90, safeSpeed, 26); //travelling to skystone
-                        sm.rotate(-90, safeSpeed); // spin to line up collector to skystone
+                        switch (placement){
 
+                            case 1:
+
+                                sm.translate(180, safeSpeed, 7);
+
+                                // INSERT SERVO STUFF
+
+                                sm.translate(180, safeSpeed, 20.75);
+                                sm.translate(0, safeSpeed, 44);
+
+                                sm.translate(-90, safeSpeed, 69);
+
+                                sm.translate(180, safeSpeed, 24);
+
+                            case 2:
+
+                            case 3:
+
+
+                        }
                         if(sm.next_state_to_execute()){
                             r.initRunToTarget("mtrLift", 3000, safeSpeed);
                             if(r.hasMotorEncoderReached("mtrLift",3010)){
@@ -171,13 +217,23 @@ public class AutonomousComp extends OpMode {
                         sm.translate(90, safeSpeed, 24); //travelling to wall
                     }
 
-                    sm.translate(0, safeSpeed, 76);
+                    sm.rotate(-90, safeSpeed);
 
-                    //TO Foundation and BACK
-                    sm.rotate(-90,safeSpeed);
-                    sm.translate(0, safeSpeed, 24);
-                    sm.pause(1000);
-                    sm.translate(180, safeSpeed, 30);
+                    sm.translate(0, safeSpeed, 23);
+                    sm.translate(-90, safeSpeed, 17);
+
+                    // Found grabber
+
+                    sm.translate(90, safeSpeed, 42);
+//
+//
+//                    sm.translate(0, safeSpeed, 76);
+//
+//                    //TO Foundation and BACK
+//                    sm.rotate(-90,safeSpeed);
+//                    sm.translate(0, safeSpeed, 24);
+//                    sm.pause(1000);
+//                    sm.translate(180, safeSpeed, 30);
 
                     if(returnPath.equals("wall")) {
                         sm.translate(-94,safeSpeed,40);
