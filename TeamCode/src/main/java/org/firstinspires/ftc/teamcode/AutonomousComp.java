@@ -33,13 +33,13 @@ public class AutonomousComp extends OpMode {
     int fIndex = 0;
 
 //    String allianceColor, returnPath, apFoundationOrientation = "No Change";
-    String allianceColor = "blue";
-    String returnPath = "wall";
-    String apFoundationOrientation = "|";
-    boolean loadingSideStart = true;
-    boolean apMoveFoundation = false;
-    long wait = 0;
-    int skyStones = -1;
+    String allianceColor = "blue"; //default
+    String returnPath = "wall"; //default
+    String apFoundationOrientation = "|"; //default
+    boolean loadingSideStart = true; //default
+    boolean apMoveFoundation = false; //default
+    long wait = 0; //default
+    int skyStones = 2; //default
 
     int[] vsData = null;
 
@@ -111,196 +111,211 @@ public class AutonomousComp extends OpMode {
     @Override
     public void loop() {
         sm.initializeMachine();
-//        vision.initializeMachine();
+        vision.initializeMachine();
 //
         int[] temp = vision.getVisionData();
         vsData = temp == null ? vsData : temp;
-        final int placement = 1;
+        final int placement = vsData[0];
+        telemetry.addData("Placement: ", placement+"");
 
-//        vision.SetFlag(sm, "Vision Done");
+        vision.SetFlag(sm, "Vision Done");
 
 
         sm.pause(wait);
 
-//        sm.WaitForFlag("VisionDone");
+        vision.WaitForFlag("VisionDone");
 
             if (loadingSideStart) {
-                if(allianceColor.equals("blue")) {
+                if (allianceColor.equals("blue")) {
 
                     sm.translate(90, safeSpeed, 26);
                     sm.rotate(-90, safeSpeed);
 
-                    if(returnPath.equals("not_wall")) {
+                    if (returnPath.equals("not_wall")) {
 
-                        switch (placement){
+                        switch (placement) {
 
                             case 1:
 
-                                sm.translate(180, safeSpeed, 7);
+                                sm.translate(-170, safeSpeed, 7);
 
-                                // INSERT SERVO STUFF
+                                // INSERT SERVO & LIFT CODE
 
-                                sm.translate(180, safeSpeed, 20.75);
+//                                sm.translate(180, safeSpeed, 20.75);
+
+                                //INSERT SERVO & LIFT CODE
+
                                 sm.translate(0, safeSpeed, 12);
 
-                                sm.translate(-90, safeSpeed, 69);
+                                sm.translate(-90, safeSpeed, 69); //TO BUILDING SIDE
 
-                                sm.translate(180, safeSpeed, 14);
+                                sm.translate(180, safeSpeed, 14); // DRIVE TO FOUNDATION
+
+                                //INSERT SERVO FOUNDATION GRABBER CODE
+
                                 sm.translate(0, safeSpeed, 5);
+                                break;
 
                             case 2:
+                                break;
 
                             case 3:
-
+                                break;
 
                         }
-
-
-
-//                        if(sm.next_state_to_execute()){
-                            /*sm.initRunToTarget("mtrLift", 3000, safeSpeed);
-                            r.setServoPosition("srvClampLeft", .1);
-                            r.setServoPosition("srvClampRight", .6);
-
-                            sm.translate(180, .2, 4);
-
-                            r.setServoPosition("srvClampRight", .1);
-                            sm.initRunToTarget("mtrLift", 0, safeSpeed);
-
-                            sm.translate(0, .2, 4);*/
-
-//                            sm.incrementState();
-//                        }
                     } else { //returnPath.equals("wall");
-                        switch (placement){
+                        switch (placement) {
 
                             case 1:
 
-                                sm.translate(180, safeSpeed, 7);
+                                sm.translate(-165, safeSpeed, 7);
 
-                                // INSERT SERVO STUFF
+                                // INSERT SERVO & LIFT CODE
 
-                                sm.translate(180, safeSpeed, 20.75);
-                                sm.translate(0, safeSpeed, 44);
+                                sm.translate(0, safeSpeed, 27);
 
-                                sm.translate(-90, safeSpeed, 69);
+                                sm.translate(-90, safeSpeed, 69); //TO BUILDING SIDE
 
-                                sm.translate(180, safeSpeed, 24);
+                                sm.translate(180, safeSpeed, 24); //DRIVE TO FOUNDATION
 
+                                break;
                             case 2:
+                                sm.translate(170, safeSpeed, 7);
+
+                                // INSERT SERVO & LIFT CODE
+
+                                sm.translate(0, safeSpeed, 27);
+
+                                sm.translate(-90, safeSpeed, 73); //TO BUILDING SIDE
+
+                                sm.translate(180, safeSpeed, 24); //DRIVE TO FOUNDATION
+                                break;
 
                             case 3:
+                                sm.translate(110, safeSpeed, 12);
 
+                                // INSERT SERVO & LIFT CODE
+
+                                sm.translate(0, safeSpeed, 25);
+
+                                sm.translate(-90, safeSpeed, 78); //TO BUILDING SIDE
+
+                                sm.translate(180, safeSpeed, 24); //DRIVE TO FOUNDATION
+                                break;
 
                         }
-                        if(sm.next_state_to_execute()){
-                            r.initRunToTarget("mtrLift", 3000, safeSpeed);
-                            if(r.hasMotorEncoderReached("mtrLift",3010)){
-                                r.initRunToTarget("mtrLift", 0, safeSpeed);
-                                if(r.hasMotorEncoderReached("mtrLift",0+200)){
-                                    r.setPower("mtrLift",0);
-                                }
-                            }
-                            r.setServoPosition("srvClampLeft", .1);
-                            r.setServoPosition("srvClampRight", .6);
+//                        if(sm.next_state_to_execute()){
+//                            r.initRunToTarget("mtrLift", 3000, safeSpeed);
+//                            if(r.hasMotorEncoderReached("mtrLift",3010)){
+//                                r.initRunToTarget("mtrLift", 0, safeSpeed);
+//                                if(r.hasMotorEncoderReached("mtrLift",0+200)){
+//                                    r.setPower("mtrLift",0);
+//                                }
+//                            }
+//                            r.setServoPosition("srvClampLeft", .1);
+//                            r.setServoPosition("srvClampRight", .6);
+//
+//                            sm.translate(180, .2, 4);
+//
+//                            r.setServoPosition("srvClampRight", .1);
+//
+//
+//                            sm.translate(0, .2, 4);
+//
+//                            sm.incrementState();
+//                        }
 
-                            sm.translate(180, .2, 4);
-
-                            r.setServoPosition("srvClampRight", .1);
-
-                            
-                            sm.translate(0, .2, 4);
-
-                            sm.incrementState();
-                        }
-
-                        sm.translate(90, safeSpeed, 24); //travelling to wall
+//                        sm.translate(90, safeSpeed, 24); //travelling to wall
                     }
 
+                    //BOTH DO AFTER REACHING FOUNDATION
+
                     sm.rotate(-90, safeSpeed);
+
+                    //FOUNDATION GRABBER DOWN
 
                     sm.translate(0, safeSpeed, 23);
-                    sm.translate(-90, safeSpeed, 17);
+                    sm.translate(90, safeSpeed, 32);
 
-                    // Found grabber
+                    //FOUNDATION GRABBER UP
 
-                    sm.translate(90, safeSpeed, 42);
 //
-//
-//                    sm.translate(0, safeSpeed, 76);
-//
-//                    //TO Foundation and BACK
-//                    sm.rotate(-90,safeSpeed);
-//                    sm.translate(0, safeSpeed, 24);
-//                    sm.pause(1000);
-//                    sm.translate(180, safeSpeed, 30);
 
-                    if(returnPath.equals("wall")) {
-                        sm.translate(-94,safeSpeed,40);
-                    } else {
-                        //When Alliance if on the wall
+//                    when have working color sensors
+
+//                    if(sm.next_state_to_execute()) {
+//                        int frontBlue = r.getColorValue("colorFront", "blue");
+//                        int backBlue = r.getColorValue("colorBack", "blue");
+//                        if(frontBlue<11){
+//                            //WheelSetL is static, might cause problem
+//                            r.setPower(Robot.wheelSet1[0],.2);
+//                            r.setPower(Robot.wheelSet2[0],-.2);
+//                        }else{
+//                            r.setPower(Robot.wheelSet1[0],-.3);
+//                            r.setPower(Robot.wheelSet2[0],.3);
+//                        }
+//                        if(backBlue<11){
+//                            r.setPower(Robot.wheelSet1[1],.2);
+//                            r.setPower(Robot.wheelSet2[1],-.2);
+//                        }else{
+//                            r.setPower(Robot.wheelSet1[1],-.3);
+//                            r.setPower(Robot.wheelSet2[1],.3);
+//                        }
+//                        if(frontBlue >= 11 && backBlue >= 11){
+//                            r.setDrivePower(0,0);
+//                            sm.incrementState();
+//                        }
+//                    }
+
+
+                    if(skyStones==2) { //GOING FOR SECOND SKYSTONE
+
+                        if(returnPath.equals("wall")){
+
+                            sm.translate(180, safeSpeed, 96);
+                            sm.translate(-90, safeSpeed, 5);
+                            sm.rotate(90, safeSpeed);
+
+                            switch (placement){
+
+                                case 1:
+                                    break;
+
+                                case 2:
+                                    break;
+
+                                case 3:
+                                    break;
+
+                            }
+
+                            sm.translate(180, safeSpeed, 25);
+
+                        }
+
+                    } else { //ONE SKYSTONE & PARK UNDER BRIDGE
+
+
                     }
 
-                    if(sm.next_state_to_execute()) {
-                        int frontBlue = r.getColorValue("colorFront", "blue");
-                        int backBlue = r.getColorValue("colorBack", "blue");
-                        if(frontBlue<11){
-                            //WheelSetL is static, might cause problem
-                            r.setPower(Robot.wheelSet1[0],.2);
-                            r.setPower(Robot.wheelSet2[0],-.2);
-                        }else{
-                            r.setPower(Robot.wheelSet1[0],-.3);
-                            r.setPower(Robot.wheelSet2[0],.3);
-                        }
-                        if(backBlue<11){
-                            r.setPower(Robot.wheelSet1[1],.2);
-                            r.setPower(Robot.wheelSet2[1],-.2);
-                        }else{
-                            r.setPower(Robot.wheelSet1[1],-.3);
-                            r.setPower(Robot.wheelSet2[1],.3);
-                        }
-                        if(frontBlue >= 11 && backBlue >= 11){
-                            r.setDrivePower(0,0);
-                            sm.incrementState();
-                        }
-                    }
-                    if(skyStones==2) {
-                        sm.translate(0, safeSpeed / 2, 23);
-                        sm.translate(90, safeSpeed / 2, 10);
-                        sm.translate(-90, safeSpeed / 2, 2);
+                } else { //ALLIANCE COLOR === RED
 
-                        sm.translate(0, safeSpeed / 2, 10);
-                        sm.translate(-90, safeSpeed / 2, 3.5);
-                        sm.rotate(-90, safeSpeed / 2);
-                        sm.translate(0, safeSpeed / 2, 7);
-                        //Insert Collection System
-                        sm.translate(180, safeSpeed / 2, 7);
-                        sm.translate(-90, safeSpeed / 2, 20);
-                        sm.translate(180, safeSpeed / 2, 77);
-                    }
-                } else {
-                    sm.translate(0, safeSpeed, 36.75);
-                    sm.translate(90, safeSpeed, 3.6);
-                    sm.rotate(90, safeSpeed);
-                    sm.translate(0, safeSpeed, 7);
-                    //Insert Collection System
-                    sm.translate(180, safeSpeed, 7);
-                    sm.translate(90, safeSpeed, 20);
-                    sm.translate(180, 1.0, 72);
-                    sm.rotate(-90, safeSpeed);
-                    //sm.translate(0,safeSpeed,4); Add this if our servos cant pick up at that distance
-                    //Insert Foundation Servos
-                    sm.translate(180, .6, 22);
-                    //Pulled Foundation to Building Site ^
-
-                    //Go back for Second SkyStone V------------
-
-                    //If our alliance is not parked against wall
-                    sm.translate(90, .7, 111); //Add color sensor, to know when we're near the tape
-                    //When see tape, move x amount to the 3rd Skystone
                 }
             } else {
+                if(allianceColor.equals("blue")){
 
+                    sm.translate(90, safeSpeed, 26);
+                    sm.rotate(-90, safeSpeed);
+
+                    if(returnPath.equals("not_wall")){
+
+                    } else { //returnPath.equals("wall");
+
+                    }
+
+                } else { // ALLIANCE COLOR === RED
+
+                }
             }
         telemetry.addData("mtrLeftFront", r.getEncoderCounts("mtrFrontLeft"));
         telemetry.addData("mtrRightFront", r.getEncoderCounts("mtrRightFront"));
