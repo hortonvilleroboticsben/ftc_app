@@ -151,18 +151,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/surface"
-            android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:orientation="vertical" />
-
         <TextureView
             android:id="@+id/ftcImageView"
             android:layout_width="match_parent"
             android:layout_height="500dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"/>
+
+        <LinearLayout
+            android:id="@+id/surface"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:orientation="vertical" />
         </RelativeLayout>
 
 
