@@ -24,8 +24,8 @@ public class Doodler extends View {
         y = 300;
         w = 190;
         h = 50;
-        xp = y;
-        yp = this.getHeight()-x;
+        xp = this.getWidth()-y-h;
+        yp = x;
         wp = h;
         hp = w;
         r = new Rect(xp,yp,xp+wp,yp+hp);

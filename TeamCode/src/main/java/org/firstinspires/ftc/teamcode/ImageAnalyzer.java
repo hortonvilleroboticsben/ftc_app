@@ -133,6 +133,7 @@ public class ImageAnalyzer extends OpMode {
         //for (int i = 0; i<layers.getNumBands();i++) ImageMiscOps.rotateCW(layers.getBand(i), layers.getBand(i));
         //ConvertBitmap.planarToBitmap(layers, bitmap, null);
         bitmap = Bitmap.createBitmap(bitmap,50, 300,190,50);
+        save(bitmap);
         //save(bitmap);
         width = bitmap.getWidth();
         height = bitmap.getHeight();
