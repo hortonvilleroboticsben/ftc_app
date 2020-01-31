@@ -5,6 +5,7 @@ import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.json.JSONObject;
 
@@ -21,6 +22,7 @@ public class AutonomousComp extends OpMode {
     Robot r;
     StateMachine sm = new StateMachine();
     StateMachine vision = new StateMachine();
+    StateMachine multitask = new StateMachine();
     boolean OSFound, OSColor = false;
     double safeSpeed = .65;
     boolean waitOS, confirmOS = false;
@@ -33,7 +35,7 @@ public class AutonomousComp extends OpMode {
     int fIndex = 0;
 
     //    String allianceColor, returnPath, apFoundationOrientation = "No Change";
-    String allianceColor = "red"; //default
+    String allianceColor = "blue"; //default
     String returnPath = "wall"; //default
     String apFoundationOrientation = "|"; //default
     boolean loadingSideStart = true; //default
@@ -47,6 +49,8 @@ public class AutonomousComp extends OpMode {
     public void init() {
         r = Robot.getInstance();
         r.initialize(this);
+
+        r.setServoPosition("srvFound", .85);
 
         rFolder = new File(Environment.getExternalStorageDirectory() + "/JSONConfigs");
         if (!rFolder.exists())
@@ -77,7 +81,10 @@ public class AutonomousComp extends OpMode {
 
                 fIndex = fIndex > fList.size() - 1 ? fList.size() - 1 : fIndex < 0 ? 0 : fIndex;
 
-                if (gamepad1.a && !gamepad1.start && !gamepad2.start) confirmOS = true;
+                if (gamepad1.a && !gamepad1.start && !gamepad2.start){
+                    confirmOS = true;
+                    telemetry.addData("File Selected",""+fList.get(fIndex));
+                }
             } else {
                 telemetry.addData("ERROR", "No files available.");
             }
@@ -113,6 +120,7 @@ public class AutonomousComp extends OpMode {
     public void loop() {
         sm.initializeMachine();
         vision.initializeMachine();
+        multitask.initializeMachine();
 //
         int[] temp = vision.getVisionData();
         vsData = temp == null ? vsData : temp;
@@ -132,6 +140,10 @@ public class AutonomousComp extends OpMode {
                 sm.translate(90, safeSpeed, 26);
                 sm.rotate(-90, safeSpeed);
 
+                sm.setServoPosition("srvClampLeft", .1);
+                sm.setServoPosition("srvClampRight", .6);
+                sm.setServoPower("srvRotator", .2);
+
                 switch (placement) {
                     case 1:
                         sm.translate(-140, safeSpeed, 8);
@@ -146,6 +158,15 @@ public class AutonomousComp extends OpMode {
 
                 // INSERT SERVO & LIFT CODE
 
+
+
+                sm.pause(750);
+
+                sm.setServoPosition("srvClampRight", .1);
+                sm.setServoPosition("srvClampLeft", .3);
+
+                sm.pause(750);
+
                 if (returnPath.equals("not_wall")) {
                     //Distance to move from the stones to get to not_wall position
                     sm.translate(-87, safeSpeed, 73);
@@ -154,56 +175,80 @@ public class AutonomousComp extends OpMode {
                     }
                 } else { //returnPath.equals("wall");
                     sm.translate(0, safeSpeed, 27);
-                    sm.translate(-87, safeSpeed, 73); //TO BUILDING SIDE -90 is good
-                    if (apMoveFoundation) {
+                    sm.translate(-87, safeSpeed, 67); //TO BUILDING SIDE -90 is good
+                    sm.SetFlag(multitask,"Start");
+
+                    if (!apMoveFoundation) {
                         sm.translate(180, safeSpeed, 20); //DRIVE TO FOUNDATION
                     }
                 }
-//                        if(sm.next_state_to_execute()){
-//                            r.initRunToTarget("mtrLift", 3000, safeSpeed);
-//                            if(r.hasMotorEncoderReached("mtrLift",3010)){
-//                                r.initRunToTarget("mtrLift", 0, safeSpeed);
-//                                if(r.hasMotorEncoderReached("mtrLift",0+200)){
-//                                    r.setPower("mtrLift",0);
-//                                }
-//                            }
-//                            r.setServoPosition("srvClampLeft", .1);
-//                            r.setServoPosition("srvClampRight", .6);
-//
-//                            sm.translate(180, .2, 4);
-//
-//                            r.setServoPosition("srvClampRight", .1);
-//
-//
-//                            sm.translate(0, .2, 4);
-//
-//                            sm.incrementState();
-//                        }
-
-//                        sm.translate(90, safeSpeed, 24); //travelling to wall
 
                 //BOTH DO AFTER REACHING FOUNDATION
+                multitask.WaitForFlag("Start");
 
-                if (apMoveFoundation) {
-                    sm.rotate(-90, safeSpeed);
+                telemetry.addData("flag", multitask.flag);
+                telemetry.addData("state",multitask.state_in_progress);
+                telemetry.addData("target", r.motors.get("mtrLift").getTargetPosition());
+                telemetry.addData("pw", r.getPower("mtrLift"));
+                telemetry.addData("rm", r.motors.get("mtrLift").getMode());
 
 
-                    sm.translate(0, safeSpeed, 15.5);
+                if(multitask.next_state_to_execute()){
+                    r.resetEncoder("mtrLift");
+                    r.setTarget("mtrLift", -200);
+                    r.setPower("mtrLift", 0.5);
+                    r.setRunMode("mtrLift", DcMotor.RunMode.RUN_TO_POSITION);
+                    multitask.incrementState();
+                }
 
-                    if (sm.next_state_to_execute()) { //FOUNDATION GRABBER DOWN
-                        r.setServoPosition("srvFound", .8);
-                        sm.incrementState();
-                    }
+                telemetry.addData("enc",r.getEncoderCounts("mrtLift"));
 
-                    sm.pause(500);
+                sm.translate(180, safeSpeed-.1, 6);
 
-                    sm.translate(90, .75, 50);
+                sm.setServoPosition("srvClampLeft", .1);
+                sm.setServoPosition("srvClampRight", .6);
 
-                    if (sm.next_state_to_execute()) { //FOUNDATION GRABBER UP
-                        r.setServoPosition("srvFound", .2);
-                        sm.incrementState();
+                if(multitask.next_state_to_execute()){
+                    if(r.hasMotorEncoderReached("mtrLift", -200)){
+                        r.setPower("mtrLift", 0);
+                        multitask.incrementState();
                     }
                 }
+
+                multitask.SetFlag(sm, "Done");
+
+                sm.WaitForFlag("Done");
+
+                sm.translate(0, safeSpeed, 2);
+
+                if (!apMoveFoundation) {
+                    sm.rotate(-95, safeSpeed);
+                    sm.translate(-90,safeSpeed,2);
+                    sm.translate(0, safeSpeed, 15.5);
+                    sm.setServoPower("srvFound", .2);
+                    sm.pause(500);
+                    sm.translate(90, .75, 50);
+                    sm.setServoPower("srvFound", .8);
+                }
+
+                if(multitask.next_state_to_execute()){
+                    r.resetEncoder("mtrLift");
+                    r.setTarget("mtrLift", 0);
+                    r.setPower("mtrLift", 0.5);
+                    r.setRunMode("mtrLift", DcMotor.RunMode.RUN_TO_POSITION);
+                    multitask.incrementState();
+                }
+
+                if(multitask.next_state_to_execute()){
+                    if(r.hasMotorEncoderReached("mtrLift", 0)){
+                        r.setPower("mtrLift", 0);
+                        multitask.incrementState();
+                    }
+                }
+
+                multitask.SetFlag(sm, "Done");
+
+                sm.WaitForFlag("Done");
 
 //
 
@@ -232,8 +277,27 @@ public class AutonomousComp extends OpMode {
 //                            sm.incrementState();
 //                        }
 //                    }
+
+
+
+                //cut drive short... not under bridge.... close clamps, translate right 24, translate 180, open clamps
+
+
+
                 if (returnPath.equals("wall")) { //This reaches to the tape line
-                    sm.translate(175, safeSpeed, 52.5);
+//                    sm.translate(175, safeSpeed, 52.5);
+
+                    sm.translate(175, safeSpeed, 36);
+                    sm.setServoPosition("srvClampRight", .1);
+                    sm.setServoPosition("srvClampLeft", .3);
+                    sm.translate(-90, safeSpeed, 24);
+
+                    sm.translate(180, safeSpeed, 5);
+
+                    sm.setServoPosition("srvClampRight", .6);
+                    sm.setServoPosition("srvClampLeft", .1);
+
+
                 } else if (returnPath.equals("not_wall")) {
                     //Move from building site to not_wall position
                 }

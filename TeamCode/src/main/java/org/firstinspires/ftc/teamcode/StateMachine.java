@@ -113,6 +113,29 @@ class StateMachine{
         }
     }
 
+    public void runToTarget(String motorName, int target, double power) {
+        if(next_state_to_execute()) {
+            if (rbt.motors.get(motorName) != null) {
+                rbt.setTarget(motorName, target);
+                rbt.setPower(motorName, power);
+            } else {
+                Log.e(TAG, "initRunToTarget: failed to run motor: " + motorName + " to target: " + target + " at power: " + power);
+            }
+
+            if ((rbt.hasMotorEncoderReached(motorName, +10)
+                    || rbt.hasMotorEncoderReached(motorName, -10))) {
+
+                rbt.setPower(motorName,0);
+
+                rbt.resetEncoder(motorName);
+
+                rbt.setRunMode(motorName, DcMotor.RunMode.RUN_USING_ENCODER);
+                incrementState();
+            }
+
+        }
+    }
+
     public void initRunToTarget(String motorName, int target, double power, boolean reset) {
         if (rbt.motors.get(motorName) != null) {
             if (reset) rbt.resetEncoder(motorName);
@@ -166,7 +189,6 @@ class StateMachine{
                 rbt.setDriveRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 moveInit = true;
                 incrementState();
-//            }
             }
         }
     }
@@ -210,6 +232,20 @@ class StateMachine{
             }
         }
 
+    }
+
+    public void setServoPosition(String servo, double pos){
+        if(next_state_to_execute()){
+            rbt.setServoPosition(servo,pos);
+            incrementState();
+        }
+    }
+
+    public void setServoPower(String servo, double power){
+        if(next_state_to_execute()){
+            rbt.setServoPower(servo,power);
+            incrementState();
+        }
     }
 
     public void skyStone(){
