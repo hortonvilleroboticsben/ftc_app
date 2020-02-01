@@ -134,9 +134,9 @@ public class TeleOpComp extends OpMode {
             } else if (!gamepad2.y) OSFound = false;
 
             if(downFound){
-                r.setServoPosition("srvFound",.7);
-            } else {
                 r.setServoPosition("srvFound",.2);
+            } else {
+                r.setServoPosition("srvFound",.7);
             }
 
             //Rotator...............................................................................
@@ -183,6 +183,7 @@ public class TeleOpComp extends OpMode {
         telemetry.addData("mtrFrontRight", r.getEncoderCounts("mtrFrontRight"));
         telemetry.addData("mtrBackLeft", r.getEncoderCounts("mtrBackLeft"));
         telemetry.addData("mtrBackRight", r.getEncoderCounts("mtrBackRight"));
+        telemetry.addData("mtrLift", r.getEncoderCounts("mtrLift"));
 
         telemetry.addData("Left Clamp Position:",srvClampLeft.getPosition());
         telemetry.addData("Right Clamp Position:",srvClampRight.getPosition());
