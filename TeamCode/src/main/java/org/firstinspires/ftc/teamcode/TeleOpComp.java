@@ -120,7 +120,7 @@ public class TeleOpComp extends OpMode {
             } else if(!gamepad2.a && !gamepad1.start && !gamepad2.start) OSClamp = false;
 
             if(openClamp){
-                r.setServoPosition("srvClampLeft",.18);
+                r.setServoPosition("srvClampLeft",.17);
                 r.setServoPosition("srvClampRight", .4);
             } else {
                 r.setServoPosition("srvClampLeft",.3);
